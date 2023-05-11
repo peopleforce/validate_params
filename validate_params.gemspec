@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.email = ["denis.cherevatenko@peopleforce.io "]
 
   spec.summary = "Gem to validate params in controllers"
-  spec.description = "Provides a clear way to validate params for each action in controllers"
-  spec.required_ruby_version = ">= 2.6.0"
+  spec.description = "Provides a clean DSL to validate params for controller actions."
+  spec.required_ruby_version = ">= 2.7.0"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
