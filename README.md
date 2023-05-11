@@ -22,7 +22,7 @@ If bundler is not being used to manage dependencies, install the gem by executin
 class TestController < ActionController::Base
   include ValidateParams::ParamsValidator
 
-  validate_params :index do |p|
+  validate_params_for :index do |p|
     p.param :id_param, Integer
     p.param :date_param, Date
     p.param :datetime_param, DateTime
