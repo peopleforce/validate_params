@@ -2,7 +2,7 @@
 
 [![Rspec](https://github.com/peopleforce/validate_params/actions/workflows/rspec.yml/badge.svg)](https://github.com/peopleforce/validate_params/actions/workflows/rspec.yml)
 
-ParamValidations is a lightweight, robust Ruby on Rails gem that introduces a simple yet powerful DSL (Domain Specific Language) to validate parameters for your controller actions. It is designed to make your code cleaner, more maintainable, and ensures that your application handles invalid or unexpected parameters gracefully.
+ValidateParams is a lightweight, robust Ruby on Rails gem that introduces a simple yet powerful DSL (Domain Specific Language) to validate parameters for your controller actions. It is designed to make your code cleaner, more maintainable, and ensures that your application handles invalid or unexpected parameters gracefully.
 
 ## Installation
 
