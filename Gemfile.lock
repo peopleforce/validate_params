@@ -183,6 +183,7 @@ GEM
     zeitwerk (2.6.8)
 
 PLATFORMS
+  ruby
   arm64-darwin-21
   arm64-darwin-22
 
