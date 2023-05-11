@@ -17,7 +17,7 @@ module ValidateParams
         @params_validations << { field: field, type: type, required: required, default: default }
       end
 
-      def validate_params(request_action, &block)
+      def validate_params_for(request_action, &block)
         @request_action = request_action
 
         yield(self) if block

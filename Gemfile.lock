@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    validate_params (0.1.0)
+    validate-params (0.1.0)
       activesupport (~> 7.0.4)
 
 GEM
@@ -37,7 +37,11 @@ GEM
     loofah (2.20.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
+    mini_portile2 (2.8.2)
     minitest (5.18.0)
+    nokogiri (1.14.3)
+      mini_portile2 (~> 2.8.0)
+      racc (~> 1.4)
     nokogiri (1.14.3-arm64-darwin)
       racc (~> 1.4)
     parallel (1.23.0)
@@ -87,9 +91,9 @@ GEM
     unicode-display_width (2.4.2)
 
 PLATFORMS
-  ruby
   arm64-darwin-21
   arm64-darwin-22
+  ruby
 
 DEPENDENCIES
   actionpack (~> 7.0.4)
@@ -97,7 +101,7 @@ DEPENDENCIES
   rake (~> 13.0)
   rspec (~> 3.0)
   rubocop (~> 1.21)
-  validate_params!
+  validate-params!
 
 BUNDLED WITH
    2.3.22

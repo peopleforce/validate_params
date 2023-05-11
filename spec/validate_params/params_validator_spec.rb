@@ -122,7 +122,7 @@ end
 class TestClassWithSymbol < ActionController::Base
   include ValidateParams::ParamsValidator
 
-  validate_params :index do |p|
+  validate_params_for :index do |p|
     p.param :id_param, Integer
     p.param :date_param, Date
     p.param :datetime_param, DateTime
@@ -136,7 +136,7 @@ end
 class TestClassWithHash < ActionController::Base
   include ValidateParams::ParamsValidator
 
-  validate_params :index do |p|
+  validate_params_for :index do |p|
     p.param({ id_param: :eq }, Integer)
     p.param({ date_param: :gt }, Date)
     p.param({ datetime_param: :lt }, DateTime)
