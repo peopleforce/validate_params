@@ -8,6 +8,8 @@ on:
 
 jobs:
   build:
+    runs-on: ubuntu-latest
+
     steps:
     - name: Publish gem
       uses: dawidd6/action-publish-gem@v1
