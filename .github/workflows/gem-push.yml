@@ -1,12 +1,15 @@
+name: Gem push
+
 on:
   push:
     tags:
       - '*'
 
----
-
-- name: Publish gem
-  uses: dawidd6/action-publish-gem@v1
-  with:
-    # Optional, will publish to RubyGems if specified
-    api_key: ${{secrets.RUBYGEMS_API_KEY}}
+jobs:
+  build:
+    steps:
+    - name: Publish gem
+      uses: dawidd6/action-publish-gem@v1
+      with:
+        # Optional, will publish to RubyGems if specified
+        api_key: ${{secrets.RUBYGEMS_API_KEY}}
