@@ -8,5 +8,5 @@ module ValidateParams
 end
 
 ActiveSupport.on_load(:action_controller) do
-  include ValidateParams
+  include ValidateParams::ParamsValidator
 end
