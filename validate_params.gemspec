@@ -4,7 +4,7 @@ require_relative "lib/validate_params/version"
 
 Gem::Specification.new do |spec|
   spec.license = "MIT"
-  spec.name = "validate_params"
+  spec.name = "validate-params"
   spec.version = ValidateParams::VERSION
   spec.authors = ["dcherevatenko"]
   spec.email = ["denis.cherevatenko@peopleforce.io "]
