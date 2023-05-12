@@ -23,13 +23,15 @@ class TestController < ActionController::Base
   include ValidateParams::ParamsValidator
 
   validate_params :index do |p|
+    p.param :occurred_on, Date, required: true
     p.param :quantity, Integer
     p.param :date_of_birth, Hash do |pp|
-      pp.param :gt, Date, required: true
-      pp.param :lt, Date, required: true
+      pp.param :gt, Date
+      pp.param :lt, Date
     end
     p.param :created_at, Hash do |pp|
-      pp.param :lt, DateTime, required: true
+      pp.param :lt, DateTime
+      pp.param :gt, DateTime
     end
   end
 
