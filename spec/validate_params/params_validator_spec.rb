@@ -115,6 +115,16 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
           subject
         end
       end
+
+      context "when date param is required" do
+        let(:datetime_param) { "invalid" }
+
+        it "render json error with localized message" do
+          expect(ctrl).to receive(:render)
+          expect(I18n).to receive(:t).with("api.public.invalid_parameter", { field: "datetime_param[lt]", field_type: DateTime, field_value: datetime_param })
+          subject
+        end
+      end
     end
   end
 end
@@ -140,6 +150,7 @@ class TestClassWithHash < ActionController::Base
     p.param({ id_param: :eq }, Integer)
     p.param({ date_param: :gt }, Date)
     p.param({ datetime_param: :lt }, DateTime)
+    p.param(:occurred_on, Date, required: true)
   end
 
   def index

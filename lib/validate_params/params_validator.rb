@@ -12,7 +12,7 @@ module ValidateParams
     class_methods do
       attr_accessor :params_validations, :method
 
-      def param(field, type, required = false, default: nil)
+      def param(field, type, required: false, default: nil)
         @params_validations ||= []
         @params_validations << { field: field, type: type, required: required, default: default }
       end
@@ -71,6 +71,11 @@ module ValidateParams
                           end
 
         next if parameter_value.blank? && !params_validation[:required]
+
+        if parameter_value.blank? && params_validation[:required]
+          errors << "#{params_validation[:field]} is required"
+          next
+        end
 
         case params_validation[:type].to_s
         when "Date"
