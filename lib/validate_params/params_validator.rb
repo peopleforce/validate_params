@@ -82,7 +82,7 @@ module ValidateParams
       for params_validation in params_validations
         parameter_value = if params_validation[:field].is_a? Hash
                             params.dig(params_validation[:field].keys.first,
-                                               params_validation[:field][params_validation[:field].keys.first])
+                                       params_validation[:field][params_validation[:field].keys.first])
                           else
                             params[params_validation[:field]]
                           end

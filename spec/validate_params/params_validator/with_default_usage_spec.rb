@@ -80,7 +80,7 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
         it "returns success" do
           expect(ctrl).not_to receive(:render)
           expect(I18n).not_to receive(:t)
-          expect(ctrl).to receive_message_chain(:params, :merge!).with({ quantity: { eq: DEFAULT_INTEGER }})
+          expect(ctrl).to receive_message_chain(:params, :merge!).with({ quantity: { eq: DEFAULT_INTEGER } })
           expect(subject).to be_nil
         end
       end
@@ -96,7 +96,7 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
         it "returns success" do
           expect(ctrl).not_to receive(:render)
           expect(I18n).not_to receive(:t)
-          expect(ctrl).to receive_message_chain(:params, :merge!).with({ date_of_birth: { gt: DEFAULT_DATE }})
+          expect(ctrl).to receive_message_chain(:params, :merge!).with({ date_of_birth: { gt: DEFAULT_DATE } })
           expect(subject).to be_nil
         end
       end
@@ -112,7 +112,7 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
         it "returns success" do
           expect(ctrl).not_to receive(:render)
           expect(I18n).not_to receive(:t)
-          expect(ctrl).to receive_message_chain(:params, :merge!).with({ created_at: { lt: DEFAULT_DATETIME }})
+          expect(ctrl).to receive_message_chain(:params, :merge!).with({ created_at: { lt: DEFAULT_DATETIME } })
           expect(subject).to be_nil
         end
       end

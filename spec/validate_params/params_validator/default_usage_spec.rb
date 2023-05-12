@@ -35,7 +35,8 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
 
         it "render json error with localized message" do
           expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("validate_params.params_validator.invalid", { field: :quantity, type: Integer, value: quantity })
+          expect(I18n).to receive(:t).with("validate_params.params_validator.invalid",
+                                           { field: :quantity, type: Integer, value: quantity })
           subject
         end
       end
@@ -45,7 +46,8 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
 
         it "render json error with localized message" do
           expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("validate_params.params_validator.invalid", { field: :date_of_birth, type: Date, value: date_of_birth })
+          expect(I18n).to receive(:t).with("validate_params.params_validator.invalid",
+                                           { field: :date_of_birth, type: Date, value: date_of_birth })
           subject
         end
       end
@@ -55,7 +57,8 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
 
         it "render json error with localized message" do
           expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("validate_params.params_validator.invalid", { field: :created_at, type: DateTime, value: created_at })
+          expect(I18n).to receive(:t).with("validate_params.params_validator.invalid",
+                                           { field: :created_at, type: DateTime, value: created_at })
           subject
         end
       end
@@ -91,7 +94,8 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
 
         it "render json error with localized message" do
           expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("validate_params.params_validator.invalid", { field: "quantity[eq]", type: Integer, value: quantity })
+          expect(I18n).to receive(:t).with("validate_params.params_validator.invalid",
+                                           { field: "quantity[eq]", type: Integer, value: quantity })
           subject
         end
       end
@@ -101,7 +105,8 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
 
         it "render json error with localized message" do
           expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("validate_params.params_validator.invalid", { field: "date_of_birth[gt]", type: Date, value: date_of_birth })
+          expect(I18n).to receive(:t).with("validate_params.params_validator.invalid",
+                                           { field: "date_of_birth[gt]", type: Date, value: date_of_birth })
           subject
         end
       end
@@ -111,7 +116,8 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
 
         it "render json error with localized message" do
           expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("validate_params.params_validator.invalid", { field: "created_at[lt]", type: DateTime, value: created_at })
+          expect(I18n).to receive(:t).with("validate_params.params_validator.invalid",
+                                           { field: "created_at[lt]", type: DateTime, value: created_at })
           subject
         end
       end
