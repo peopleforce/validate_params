@@ -12,9 +12,14 @@ module ValidateParams
     class_methods do
       attr_accessor :params_validations, :method
 
-      def param(field, type, required = false, default: nil)
+      def param(field, type, required: false, default: nil, &block)
         @params_validations ||= []
-        @params_validations << { field: field, type: type, required: required, default: default }
+        @params_validations <<
+          if block
+            yield(ParamBuilder.new(field))
+          else
+            ParamBuilder.new.param(field, type, required: required, default: default)
+          end
       end
 
       def validate_params_for(request_action, &block)
@@ -34,8 +39,12 @@ module ValidateParams
 
     private
 
-    def build_error_message(field, field_type, field_value)
-      I18n.t("api.public.invalid_parameter", field: field, field_type: field_type, field_value: field_value)
+    def build_error_message(field, type, value)
+      I18n.t("validate_params.params_validator.invalid", field: field, type: type, value: value)
+    end
+
+    def build_required_message(field)
+      I18n.t("validate_params.params_validator.required", field: field)
     end
 
     def error_param_name(field)
@@ -53,7 +62,15 @@ module ValidateParams
       params_validations.each do |params_validation|
         next if params_validation[:default].blank?
 
-        params[params_validation[:field]] ||= params_validation[:default]
+        if params_validation[:field].is_a?(Hash)
+          params_validation[:field].each_key do |key|
+            next if params.dig(key, params_validation[:field][key])
+
+            params.merge!(key => { params_validation[:field][key] => params_validation[:default] })
+          end
+        else
+          params[params_validation[:field]] ||= params_validation[:default]
+        end
       end
     end
 
@@ -64,13 +81,18 @@ module ValidateParams
 
       for params_validation in params_validations
         parameter_value = if params_validation[:field].is_a? Hash
-                            request.params.dig(params_validation[:field].keys.first,
+                            params.dig(params_validation[:field].keys.first,
                                                params_validation[:field][params_validation[:field].keys.first])
                           else
-                            request.params[params_validation[:field]]
+                            params[params_validation[:field]]
                           end
 
         next if parameter_value.blank? && !params_validation[:required]
+
+        if parameter_value.blank? && params_validation[:required]
+          errors << build_required_message(error_param_name(params_validation[:field]))
+          next
+        end
 
         case params_validation[:type].to_s
         when "Date"
@@ -125,6 +147,20 @@ module ValidateParams
 
     def invalid_integer?(value)
       value !~ /\A[-+]?[0-9]+\z/
+    end
+
+    class ParamBuilder
+      def initialize(parent_field = nil)
+        @parent_field = parent_field
+      end
+
+      def param(field, type, required: false, default: nil)
+        if @parent_field
+          { field: { @parent_field => field }, type: type, required: required, default: default }
+        else
+          { field: field, type: type, required: required, default: default }
+        end
+      end
     end
   end
 end

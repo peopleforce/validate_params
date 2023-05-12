@@ -23,9 +23,9 @@ class TestController < ActionController::Base
   include ValidateParams::ParamsValidator
 
   validate_params :index do |p|
-    p.param :id_param, Integer
-    p.param :date_param, Date
-    p.param :datetime_param, DateTime
+    p.param :quantity, Integer
+    p.param :date_of_birth, Date
+    p.param :created_at, DateTime
   end
 
   def index
