@@ -24,26 +24,6 @@ class TestController < ActionController::Base
 
   validate_params :index do |p|
     p.param :quantity, Integer
-    p.param :date_of_birth, Date
-    p.param :created_at, DateTime
-  end
-
-  def index
-    ...
-  end
-end
-```
-
-Definition of the validator with block to handle the params:
-
-```ruby
-class TestController < ActionController::Base
-  include ValidateParams::ParamsValidator
-
-  validate_params_for :index do |p|
-    p.param :quantity, Hash do |pp|
-      pp.param :eq, Integer, required: true
-    end
     p.param :date_of_birth, Hash do |pp|
       pp.param :gt, Date, required: true
       pp.param :lt, Date, required: true
@@ -51,10 +31,6 @@ class TestController < ActionController::Base
     p.param :created_at, Hash do |pp|
       pp.param :lt, DateTime, required: true
     end
-  validate_params_for :index do |p|
-    p.param :id_param, Integer
-    p.param :date_param, Date
-    p.param :datetime_param, DateTime
   end
 
   def index
@@ -62,7 +38,6 @@ class TestController < ActionController::Base
   end
 end
 ```
-
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rspec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
