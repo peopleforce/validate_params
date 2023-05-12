@@ -1,5 +1,4 @@
 en:
   validate_params:
-    params_validator:
-      required: "The parameter %{field} is required"
-      invalid: "Invalid %{type} value '%{value}' for parameter %{field}"
+    required: "The parameter %{field} is required"
+    invalid: "Invalid %{type} value '%{value}' for parameter %{field}"

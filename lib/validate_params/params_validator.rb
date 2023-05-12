@@ -40,11 +40,11 @@ module ValidateParams
     private
 
     def build_error_message(field, type, value)
-      I18n.t("validate_params.params_validator.invalid", field: field, type: type, value: value)
+      I18n.t("validate_params.invalid", field: field, type: type, value: value)
     end
 
     def build_required_message(field)
-      I18n.t("validate_params.params_validator.required", field: field)
+      I18n.t("validate_params.required", field: field)
     end
 
     def error_param_name(field)
