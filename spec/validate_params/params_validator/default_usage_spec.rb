@@ -1,24 +1,24 @@
 require "spec_helper"
 require "active_support"
 require "action_controller"
-require_relative "../../lib/validate_params/params_validator"
+require_relative "../../../lib/validate_params/params_validator"
 
 RSpec.describe ValidateParams::ParamsValidator, type: :controller do
   subject do
     ctrl.send(:set_params_defaults)
     ctrl.send(:perform_validate_params)
   end
-  let(:id_param) { "1234" }
-  let(:date_param) { "2022-01-01" }
-  let(:datetime_param) { "1683749410" }
+  let(:quantity) { "1234" }
+  let(:date_of_birth) { "2022-01-01" }
+  let(:created_at) { "1683749410" }
 
   context "with symbol param name" do
     let(:ctrl) { TestClassWithSymbol.new }
-    let(:request_params) { { id_param: id_param, date_param: date_param, datetime_param: datetime_param } }
+    let(:request_params) { { quantity: quantity, date_of_birth: date_of_birth, created_at: created_at } }
 
     before do
       allow(ctrl).to receive(:action_name).and_return("index")
-      allow(ctrl).to receive_message_chain(:request, :params).and_return(request_params)
+      allow(ctrl).to receive(:params).and_return(request_params)
     end
 
     describe ".perform_validate_params" do
@@ -31,31 +31,34 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
       end
 
       context "when integer param invalid" do
-        let(:id_param) { "invalid" }
+        let(:quantity) { "invalid" }
 
         it "render json error with localized message" do
           expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("api.public.invalid_parameter", { field: :id_param, field_type: Integer, field_value: id_param })
+          expect(I18n).to receive(:t).with("validate_params.params_validator.invalid",
+                                           { field: :quantity, type: Integer, value: quantity })
           subject
         end
       end
 
       context "when date param invalid" do
-        let(:date_param) { "invalid" }
+        let(:date_of_birth) { "invalid" }
 
         it "render json error with localized message" do
           expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("api.public.invalid_parameter", { field: :date_param, field_type: Date, field_value: date_param })
+          expect(I18n).to receive(:t).with("validate_params.params_validator.invalid",
+                                           { field: :date_of_birth, type: Date, value: date_of_birth })
           subject
         end
       end
 
       context "when date param invalid" do
-        let(:datetime_param) { "invalid" }
+        let(:created_at) { "invalid" }
 
         it "render json error with localized message" do
           expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("api.public.invalid_parameter", { field: :datetime_param, field_type: DateTime, field_value: datetime_param })
+          expect(I18n).to receive(:t).with("validate_params.params_validator.invalid",
+                                           { field: :created_at, type: DateTime, value: created_at })
           subject
         end
       end
@@ -66,15 +69,15 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
     let(:ctrl) { TestClassWithHash.new }
     let(:request_params) do
       {
-        id_param: { eq: id_param },
-        date_param: { gt: date_param },
-        datetime_param: { lt: datetime_param }
+        quantity: { eq: quantity },
+        date_of_birth: { gt: date_of_birth },
+        created_at: { lt: created_at }
       }
     end
 
     before do
       allow(ctrl).to receive(:action_name).and_return("index")
-      allow(ctrl).to receive_message_chain(:request, :params).and_return(request_params)
+      allow(ctrl).to receive(:params).and_return(request_params)
     end
 
     describe ".perform_validate_params" do
@@ -87,31 +90,34 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
       end
 
       context "when integer param invalid" do
-        let(:id_param) { "invalid" }
+        let(:quantity) { "invalid" }
 
         it "render json error with localized message" do
           expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("api.public.invalid_parameter", { field: "id_param[eq]", field_type: Integer, field_value: id_param })
+          expect(I18n).to receive(:t).with("validate_params.params_validator.invalid",
+                                           { field: "quantity[eq]", type: Integer, value: quantity })
           subject
         end
       end
 
       context "when date param invalid" do
-        let(:date_param) { "invalid" }
+        let(:date_of_birth) { "invalid" }
 
         it "render json error with localized message" do
           expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("api.public.invalid_parameter", { field: "date_param[gt]", field_type: Date, field_value: date_param })
+          expect(I18n).to receive(:t).with("validate_params.params_validator.invalid",
+                                           { field: "date_of_birth[gt]", type: Date, value: date_of_birth })
           subject
         end
       end
 
       context "when date param invalid" do
-        let(:datetime_param) { "invalid" }
+        let(:created_at) { "invalid" }
 
         it "render json error with localized message" do
           expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("api.public.invalid_parameter", { field: "datetime_param[lt]", field_type: DateTime, field_value: datetime_param })
+          expect(I18n).to receive(:t).with("validate_params.params_validator.invalid",
+                                           { field: "created_at[lt]", type: DateTime, value: created_at })
           subject
         end
       end
@@ -123,9 +129,9 @@ class TestClassWithSymbol < ActionController::Base
   include ValidateParams::ParamsValidator
 
   validate_params_for :index do |p|
-    p.param :id_param, Integer
-    p.param :date_param, Date
-    p.param :datetime_param, DateTime
+    p.param :quantity, Integer
+    p.param :date_of_birth, Date
+    p.param :created_at, DateTime
   end
 
   def index
@@ -137,9 +143,15 @@ class TestClassWithHash < ActionController::Base
   include ValidateParams::ParamsValidator
 
   validate_params_for :index do |p|
-    p.param({ id_param: :eq }, Integer)
-    p.param({ date_param: :gt }, Date)
-    p.param({ datetime_param: :lt }, DateTime)
+    p.param :quantity, Hash do |pp|
+      pp.param :eq, Integer
+    end
+    p.param :date_of_birth, Hash do |pp|
+      pp.param :gt, Date
+    end
+    p.param :created_at, Hash do |pp|
+      pp.param :lt, DateTime
+    end
   end
 
   def index

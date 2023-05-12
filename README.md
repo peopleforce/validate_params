@@ -16,10 +16,41 @@ If bundler is not being used to manage dependencies, install the gem by executin
 
 ## Usage
 
+Definition of the validator with symbols as keys:
+
 ```ruby
 class TestController < ActionController::Base
   include ValidateParams::ParamsValidator
 
+  validate_params :index do |p|
+    p.param :quantity, Integer
+    p.param :date_of_birth, Date
+    p.param :created_at, DateTime
+  end
+
+  def index
+    ...
+  end
+end
+```
+
+Definition of the validator with block to handle the params:
+
+```ruby
+class TestController < ActionController::Base
+  include ValidateParams::ParamsValidator
+
+  validate_params_for :index do |p|
+    p.param :quantity, Hash do |pp|
+      pp.param :eq, Integer, required: true
+    end
+    p.param :date_of_birth, Hash do |pp|
+      pp.param :gt, Date, required: true
+      pp.param :lt, Date, required: true
+    end
+    p.param :created_at, Hash do |pp|
+      pp.param :lt, DateTime, required: true
+    end
   validate_params_for :index do |p|
     p.param :id_param, Integer
     p.param :date_param, Date
@@ -31,7 +62,6 @@ class TestController < ActionController::Base
   end
 end
 ```
-
 
 ## Development
 
