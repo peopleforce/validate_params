@@ -26,7 +26,7 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
 
         it "returns error" do
           expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("validate_params.params_validator.required", { field: :quantity })
+          expect(I18n).to receive(:t).with("validate_params.required", { param: :quantity })
           subject
         end
       end
@@ -36,7 +36,7 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
 
         it "returns error" do
           expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("validate_params.params_validator.required", { field: :date_of_birth })
+          expect(I18n).to receive(:t).with("validate_params.required", { param: :date_of_birth })
           subject
         end
       end
@@ -46,7 +46,7 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
 
         it "returns error" do
           expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("validate_params.params_validator.required", { field: :created_at })
+          expect(I18n).to receive(:t).with("validate_params.required", { param: :created_at })
           subject
         end
       end
@@ -67,7 +67,7 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
 
         it "returns error" do
           expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("validate_params.params_validator.required", { field: "quantity[eq]" })
+          expect(I18n).to receive(:t).with("validate_params.required", { param: "quantity[eq]" })
           subject
         end
       end
@@ -77,7 +77,7 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
 
         it "returns error" do
           expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("validate_params.params_validator.required", { field: "date_of_birth[gt]" })
+          expect(I18n).to receive(:t).with("validate_params.required", { param: "date_of_birth[gt]" })
           subject
         end
       end
@@ -87,7 +87,7 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
 
         it "returns error" do
           expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("validate_params.params_validator.required", { field: "created_at[lt]" })
+          expect(I18n).to receive(:t).with("validate_params.required", { param: "created_at[lt]" })
           subject
         end
       end

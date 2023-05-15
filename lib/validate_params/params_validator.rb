@@ -12,13 +12,13 @@ module ValidateParams
     class_methods do
       attr_accessor :params_validations, :method
 
-      def param(field, type, required: false, default: nil, &block)
+      def param(field, type, options = {}, &block)
         @params_validations ||= []
         @params_validations <<
           if block
             yield(ParamBuilder.new(field))
           else
-            ParamBuilder.new.param(field, type, required: required, default: default)
+            ParamBuilder.new.param(field, type, options)
           end
       end
 
@@ -39,12 +39,12 @@ module ValidateParams
 
     private
 
-    def build_error_message(field, type, value)
-      I18n.t("validate_params.invalid", field: field, type: type, value: value)
+    def build_error_message(param, type)
+      I18n.t("validate_params.invalid_type", param: param, type: type)
     end
 
-    def build_required_message(field)
-      I18n.t("validate_params.required", field: field)
+    def build_required_message(param)
+      I18n.t("validate_params.required", param: param)
     end
 
     def error_param_name(field)
@@ -60,16 +60,27 @@ module ValidateParams
 
     def set_params_defaults
       params_validations.each do |params_validation|
-        next if params_validation[:default].blank?
+        next if params_validation[:options][:default].blank?
 
         if params_validation[:field].is_a?(Hash)
           params_validation[:field].each_key do |key|
             next if params.dig(key, params_validation[:field][key])
 
-            params.merge!(key => { params_validation[:field][key] => params_validation[:default] })
+            value = if params_validation[:options][:default].is_a?(Proc)
+                      params_validation[:options][:default].call
+                    else
+                      params_validation[:options][:default]
+                    end
+            params.merge!(key => { params_validation[:field][key] => value })
           end
         else
-          params[params_validation[:field]] ||= params_validation[:default]
+          value = if params_validation[:options][:default].is_a?(Proc)
+                    params_validation[:options][:default].call
+                  else
+                    params_validation[:options][:default]
+                  end
+
+          params[params_validation[:field]] ||= value
         end
       end
     end
@@ -87,37 +98,48 @@ module ValidateParams
                             params[params_validation[:field]]
                           end
 
-        next if parameter_value.blank? && !params_validation[:required]
+        next if parameter_value.blank? && !params_validation[:options][:required]
 
-        if parameter_value.blank? && params_validation[:required]
-          errors << build_required_message(error_param_name(params_validation[:field]))
+        if parameter_value.blank? && params_validation[:options][:required]
+          errors << { message: build_required_message(error_param_name(params_validation[:field])) }
           next
         end
 
         case params_validation[:type].to_s
         when "Date"
           if invalid_date?(parameter_value)
-            errors << build_error_message(
-              error_param_name(params_validation[:field]),
-              params_validation[:type],
-              parameter_value
-            )
+            errors << {
+              message: build_error_message(error_param_name(params_validation[:field]), params_validation[:type])
+            }
           end
         when "DateTime"
           if invalid_datetime?(parameter_value)
-            errors << build_error_message(
-              error_param_name(params_validation[:field]),
-              params_validation[:type],
-              parameter_value
-            )
+            errors << {
+              message: build_error_message(error_param_name(params_validation[:field]), params_validation[:type])
+            }
           end
         when "Integer"
-          if invalid_integer?(parameter_value)
-            errors << build_error_message(
-              error_param_name(params_validation[:field]),
-              params_validation[:type],
-              parameter_value
-            )
+         if invalid_integer?(parameter_value)
+            errors << {
+              message: build_error_message(error_param_name(params_validation[:field]), params_validation[:type])
+            }
+            next
+          end
+
+          parameter_value = parameter_value.to_i
+          if params_validation[:options][:in].present? && !params_validation[:options][:in].include?(parameter_value)
+            errors << {
+              message: I18n.t("validate_params.invalid_in", param: error_param_name(params_validation[:field])),
+              valid_values: params_validation[:options][:in]
+            }
+          end
+        when "String"
+          parameter_value = parameter_value.to_s
+          if params_validation[:options][:in].present? && !params_validation[:options][:in].include?(parameter_value)
+            errors << {
+              message: I18n.t("validate_params.invalid_in", param: error_param_name(params_validation[:field])),
+              valid_values: params_validation[:options][:in]
+            }
           end
         end
       end
@@ -131,10 +153,10 @@ module ValidateParams
       return true unless /\d{4}-\d{2}-\d{2}/.match?(value)
 
       parsed_date = begin
-        Date.strptime(value, "%Y-%m-%d")
-      rescue StandardError
-        nil
-      end
+                      Date.strptime(value, "%Y-%m-%d")
+                    rescue StandardError
+                      nil
+                    end
       parsed_date.blank? || parsed_date.year > 9999
     end
 
@@ -146,7 +168,7 @@ module ValidateParams
     end
 
     def invalid_integer?(value)
-      value !~ /\A[-+]?[0-9]+\z/
+      value.to_s !~ /\A[-+]?[0-9]+\z/
     end
 
     class ParamBuilder
@@ -154,11 +176,12 @@ module ValidateParams
         @parent_field = parent_field
       end
 
-      def param(field, type, required: false, default: nil)
+      def param(field, type, options = {})
+
         if @parent_field
-          { field: { @parent_field => field }, type: type, required: required, default: default }
+          { field: { @parent_field => field }, type: type, options: options }
         else
-          { field: field, type: type, required: required, default: default }
+          { field: field, type: type, options: options }
         end
       end
     end

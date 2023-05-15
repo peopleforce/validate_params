@@ -1,4 +1,5 @@
 en:
   validate_params:
-    required: "The parameter %{field} is required"
-    invalid: "Invalid %{type} value '%{value}' for parameter %{field}"
+    required: "%{param} is required"
+    invalid_type: "%{param} must be a valid %{type}"
+    invalid_in: "%{param} is an invalid value"
