@@ -14,12 +14,13 @@ module ValidateParams
 
       def param(field, type, options = {}, &block)
         @params_validations ||= []
-        @params_validations <<
-          if block
-            yield(ParamBuilder.new(field))
-          else
-            ParamBuilder.new.param(field, type, options)
-          end
+
+        if block
+          param_builder = ParamBuilder.new(field)
+          @params_validations += yield(param_builder)
+        else
+          @params_validations << ParamBuilder.new.param(field, type, options)
+        end
       end
 
       def validate_params_for(request_action, &block)
@@ -64,6 +65,8 @@ module ValidateParams
 
         if params_validation[:field].is_a?(Hash)
           params_validation[:field].each_key do |key|
+            # Skip in case hash is configured and string is passed
+            next if params.dig(key).is_a? Hash
             next if params.dig(key, params_validation[:field][key])
 
             value = if params_validation[:options][:default].is_a?(Proc)
@@ -91,6 +94,10 @@ module ValidateParams
       errors = []
 
       for params_validation in params_validations
+        # Skip in case hash is configured and string is passed
+        next if params_validation[:field].is_a?(Hash) &&
+          params.dig(params_validation[:field].keys.first).is_a?(String)
+
         parameter_value = if params_validation[:field].is_a? Hash
                             params.dig(params_validation[:field].keys.first,
                                        params_validation[:field][params_validation[:field].keys.first])
@@ -174,15 +181,16 @@ module ValidateParams
     class ParamBuilder
       def initialize(parent_field = nil)
         @parent_field = parent_field
+        @params_validations = []
       end
 
       def param(field, type, options = {})
-
-        if @parent_field
-          { field: { @parent_field => field }, type: type, options: options }
-        else
-          { field: field, type: type, options: options }
+        unless @parent_field
+          return { field: field, type: type, options: options }
         end
+
+        @params_validations << { field: { @parent_field => field }, type: type, options: options }
+        @params_validations
       end
     end
   end
