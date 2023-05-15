@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    validate-params (0.3.0)
+    validate-params (0.5.0)
       activesupport (>= 6.1.0)
 
 GEM
@@ -42,8 +42,6 @@ GEM
     minitest (5.18.0)
     nokogiri (1.14.3)
       mini_portile2 (~> 2.8.0)
-      racc (~> 1.4)
-    nokogiri (1.14.3-arm64-darwin)
       racc (~> 1.4)
     parallel (1.23.0)
     parser (3.2.2.1)
@@ -93,8 +91,6 @@ GEM
     zeitwerk (2.6.8)
 
 PLATFORMS
-  arm64-darwin-21
-  arm64-darwin-22
   ruby
 
 DEPENDENCIES
