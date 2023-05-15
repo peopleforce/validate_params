@@ -68,7 +68,7 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
       {
         quantity: { eq: quantity },
         date_of_birth: { gt: date_of_birth },
-        created_at: { lt: created_at }
+        created_at: { gt: created_at, lt: created_at }
       }
     end
 
@@ -79,6 +79,22 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
 
     describe ".perform_validate_params" do
       context "when params are valid" do
+        it "returns success" do
+          expect(ctrl).not_to receive(:render)
+          expect(I18n).not_to receive(:t)
+          expect(subject).to be_nil
+        end
+      end
+
+      context "when date param configured as hash and string is passed" do
+        let(:request_params) do
+          {
+            quantity: { eq: quantity },
+            date_of_birth: { gt: date_of_birth },
+            created_at: created_at
+          }
+        end
+
         it "returns success" do
           expect(ctrl).not_to receive(:render)
           expect(I18n).not_to receive(:t)
@@ -111,6 +127,7 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
 
         it "render json error with localized message" do
           expect(ctrl).to receive(:render)
+          expect(I18n).to receive(:t).with("validate_params.invalid_type", { param: "created_at[gt]", type: DateTime })
           expect(I18n).to receive(:t).with("validate_params.invalid_type", { param: "created_at[lt]", type: DateTime })
           subject
         end
@@ -144,6 +161,7 @@ class TestClassWithHash < ActionController::Base
       pp.param :gt, Date
     end
     p.param :created_at, Hash do |pp|
+      pp.param :gt, DateTime
       pp.param :lt, DateTime
     end
   end
