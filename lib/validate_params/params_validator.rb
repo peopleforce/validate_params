@@ -65,6 +65,8 @@ module ValidateParams
 
         if params_validation[:field].is_a?(Hash)
           params_validation[:field].each_key do |key|
+            # Skip in case hash is configured and string is passed
+            next if params.dig(key).is_a? Hash
             next if params.dig(key, params_validation[:field][key])
 
             value = if params_validation[:options][:default].is_a?(Proc)
@@ -92,6 +94,10 @@ module ValidateParams
       errors = []
 
       for params_validation in params_validations
+        # Skip in case hash is configured and string is passed
+        next if params_validation[:field].is_a?(Hash) &&
+          params.dig(params_validation[:field].keys.first).is_a?(String)
+
         parameter_value = if params_validation[:field].is_a? Hash
                             params.dig(params_validation[:field].keys.first,
                                        params_validation[:field][params_validation[:field].keys.first])
