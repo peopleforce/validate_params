@@ -176,7 +176,7 @@ module ValidateParams
         @parent_field = parent_field
       end
 
-      def param(field, type, options)
+      def param(field, type, options = {})
 
         if @parent_field
           { field: { @parent_field => field }, type: type, options: options }
