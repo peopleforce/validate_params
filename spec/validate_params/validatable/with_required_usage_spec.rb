@@ -1,33 +1,29 @@
-require "spec_helper"
-require "active_support"
-require "action_controller"
-require_relative "../../../lib/validate_params/validatable"
+# frozen_string_literal: true
 
-RSpec.describe ValidateParams::Validatable, type: :controller do
-  subject do
-    ctrl.send(:set_params_defaults)
-    ctrl.send(:perform_validate_params)
-  end
+require "fixtures/controllers/required_with_hash_controller"
+require "fixtures/controllers/required_with_symbol_controller"
+
+RSpec.describe ValidateParams::Validatable do
+  subject { ctrl.run_callbacks }
+
   let(:quantity) { "1234" }
   let(:date_of_birth) { "2022-01-01" }
   let(:created_at) { "1683749410" }
 
   context "with symbol param name" do
-    let(:ctrl) { TestClassRequiredWithSymbol.new }
-
-    before do
-      allow(ctrl).to receive(:action_name).and_return("index")
-      allow(ctrl).to receive(:params).and_return(request_params)
-    end
+    let(:ctrl) { RequiredWithSymbolController.new(request_params) }
 
     describe "before_actions" do
       context "when quantity is not present" do
         let(:request_params) { { date_of_birth: date_of_birth, created_at: created_at } }
 
         it "returns error" do
-          expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("validate_params.required", { param: :quantity })
-          subject
+          expect(subject).to match hash_including(
+            json: hash_including(
+              success: false,
+              errors: array_including(message: "quantity is required")
+            )
+          )
         end
       end
 
@@ -35,9 +31,12 @@ RSpec.describe ValidateParams::Validatable, type: :controller do
         let(:request_params) { { quantity: quantity, created_at: created_at } }
 
         it "returns error" do
-          expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("validate_params.required", { param: :date_of_birth })
-          subject
+          expect(subject).to match hash_including(
+            json: hash_including(
+              success: false,
+              errors: array_including(message: "date_of_birth is required")
+            )
+          )
         end
       end
 
@@ -45,30 +44,31 @@ RSpec.describe ValidateParams::Validatable, type: :controller do
         let(:request_params) { { quantity: quantity, date_of_birth: date_of_birth } }
 
         it "returns error" do
-          expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("validate_params.required", { param: :created_at })
-          subject
+          expect(subject).to match hash_including(
+            json: hash_including(
+              success: false,
+              errors: array_including(message: "created_at is required")
+            )
+          )
         end
       end
     end
   end
 
   context "with hash param name" do
-    let(:ctrl) { TestClassRequiredWithHash.new }
-
-    before do
-      allow(ctrl).to receive(:action_name).and_return("index")
-      allow(ctrl).to receive(:params).and_return(request_params)
-    end
+    let(:ctrl) { RequiredWithHashController.new(request_params) }
 
     describe "before_actions" do
       context "when quantity is not present" do
-        let(:request_params) { { date_of_birth: { gt: date_of_birth }, created_at: { lt: created_at } } }
+        let(:request_params) { { asd: "22", date_of_birth: { gt: date_of_birth }, created_at: { lt: created_at } } }
 
         it "returns error" do
-          expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("validate_params.required", { param: "quantity[eq]" })
-          subject
+          expect(subject).to match hash_including(
+            json: hash_including(
+              success: false,
+              errors: array_including(message: "quantity[eq] is required")
+            )
+          )
         end
       end
 
@@ -76,9 +76,12 @@ RSpec.describe ValidateParams::Validatable, type: :controller do
         let(:request_params) { { quantity: { eq: quantity }, created_at: { lt: created_at } } }
 
         it "returns error" do
-          expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("validate_params.required", { param: "date_of_birth[gt]" })
-          subject
+          expect(subject).to match hash_including(
+            json: hash_including(
+              success: false,
+              errors: array_including(message: "date_of_birth[gt] is required")
+            )
+          )
         end
       end
 
@@ -86,45 +89,14 @@ RSpec.describe ValidateParams::Validatable, type: :controller do
         let(:request_params) { { quantity: { eq: quantity }, date_of_birth: { gt: date_of_birth } } }
 
         it "returns error" do
-          expect(ctrl).to receive(:render)
-          expect(I18n).to receive(:t).with("validate_params.required", { param: "created_at[lt]" })
-          subject
+          expect(subject).to match hash_including(
+            json: hash_including(
+              success: false,
+              errors: array_including(message: "created_at[lt] is required")
+            )
+          )
         end
       end
     end
-  end
-end
-
-class TestClassRequiredWithSymbol < ActionController::Base
-  include ValidateParams::Validatable
-
-  validate_params_for :index, format: :json do |p|
-    p.param :quantity, Integer, required: true
-    p.param :date_of_birth, Date, required: true
-    p.param :created_at, DateTime, required: true
-  end
-
-  def index
-    "success"
-  end
-end
-
-class TestClassRequiredWithHash < ActionController::Base
-  include ValidateParams::Validatable
-
-  validate_params_for :index, format: :json do |p|
-    p.param :quantity, Hash do |pp|
-      pp.param :eq, Integer, required: true
-    end
-    p.param :date_of_birth, Hash do |pp|
-      pp.param :gt, Date, required: true
-    end
-    p.param :created_at, Hash do |pp|
-      pp.param :lt, DateTime, required: true
-    end
-  end
-
-  def index
-    "success"
   end
 end

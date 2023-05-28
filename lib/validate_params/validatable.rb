@@ -3,6 +3,10 @@
 require "validate_params/types/date"
 require "validate_params/types/date_time"
 require "validate_params/types/integer"
+require_relative "param_builder"
+require_relative "param_validator"
+
+require "active_support/concern"
 
 module ValidateParams
   module Validatable
@@ -49,25 +53,6 @@ module ValidateParams
 
     private
 
-    def build_error_message(param, type)
-      I18n.t("validate_params.invalid_type", param: param, type: type)
-    end
-
-    def build_required_message(param)
-      I18n.t("validate_params.required", param: param)
-    end
-
-    def error_param_name(field)
-      case field
-      when Array
-        "#{field[0]}[#{field[1]}]"
-      when Hash
-        field.map { |k, v| "#{k}[#{v}]" }.first
-      else
-        field
-      end
-    end
-
     def set_params_defaults
       params_validations.each do |params_validation|
         next if params_validation[:options][:default].blank?
@@ -83,7 +68,7 @@ module ValidateParams
                     else
                       params_validation[:options][:default]
                     end
-            params.merge!(key => { params_validation[:field][key] => value })
+            params.deep_merge!(key => { params_validation[:field][key] => value })
           end
         else
           value = if params_validation[:options][:default].is_a?(Proc)
@@ -93,6 +78,30 @@ module ValidateParams
                   end
 
           params[params_validation[:field]] ||= value
+        end
+      end
+    end
+
+    def cast_param_values
+      params_validations.each do |params_validation|
+        if params_validation[:field].is_a?(Hash)
+          params_validation[:field].each_key do |key|
+            next unless params[key].is_a?(Hash)
+
+            value = params.dig(key, params_validation[:field][key])
+            next if value.blank?
+
+            params.deep_merge!(
+              key => {
+                params_validation[:field][key] => Types.const_get(params_validation[:type].name).cast(value)
+              }
+            )
+          end
+        else
+          value = params[params_validation[:field]]
+          next if value.blank?
+
+          params[params_validation[:field]] = Types.const_get(params_validation[:type].name).cast(value)
         end
       end
     end
@@ -114,75 +123,25 @@ module ValidateParams
                             params[params_validation[:field]]
                           end
 
-        next if parameter_value.blank? && !params_validation[:options][:required]
-
-        if parameter_value.blank? && params_validation[:options][:required]
-          errors << { message: build_required_message(error_param_name(params_validation[:field])) }
-          next
-        end
-
-        case params_validation[:type].to_s
-        when "Date"
-          unless ValidateParams::Types::Date.valid?(parameter_value)
-            errors << {
-              message: build_error_message(error_param_name(params_validation[:field]), params_validation[:type])
-            }
-          end
-        when "DateTime"
-          unless ValidateParams::Types::DateTime.valid?(parameter_value)
-            errors << {
-              message: build_error_message(error_param_name(params_validation[:field]), params_validation[:type])
-            }
-          end
-        when "Integer"
-          unless ValidateParams::Types::Integer.valid?(parameter_value)
-            errors << {
-              message: build_error_message(error_param_name(params_validation[:field]), params_validation[:type])
-            }
-            next
-          end
-
-          parameter_value = parameter_value.to_i
-          if params_validation[:options][:in].present? && !params_validation[:options][:in].include?(parameter_value)
-            errors << {
-              message: I18n.t("validate_params.invalid_in", param: error_param_name(params_validation[:field])),
-              valid_values: params_validation[:options][:in]
-            }
-          end
-        when "String"
-          parameter_value = parameter_value.to_s
-          if params_validation[:options][:in].present? && !params_validation[:options][:in].include?(parameter_value)
-            errors << {
-              message: I18n.t("validate_params.invalid_in", param: error_param_name(params_validation[:field])),
-              valid_values: params_validation[:options][:in]
-            }
-          end
-        end
+        ParamValidator.call(
+          type: params_validation[:type],
+          field: params_validation[:field],
+          value: parameter_value,
+          errors: errors,
+          options: params_validation[:options]
+        )
       end
 
-      return if errors.empty?
+      if errors.empty?
+        cast_param_values
+        return
+      end
 
       case response_format
       when :html
         head :bad_request
       else
         render json: { success: false, errors: errors }, status: :bad_request
-      end
-    end
-
-    class ParamBuilder
-      def initialize(parent_field = nil)
-        @parent_field = parent_field
-        @params_validations = []
-      end
-
-      def param(field, type, options = {})
-        unless @parent_field
-          return { field: field, type: type, options: options }
-        end
-
-        @params_validations << { field: { @parent_field => field }, type: type, options: options }
-        @params_validations
       end
     end
   end
