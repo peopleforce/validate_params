@@ -154,7 +154,7 @@ module ValidateParams
       return if errors.empty?
 
       respond_to do |format|
-        format.html { return nothing: true, status: :bad_request }
+        format.html { render nothing: true, status: :bad_request }
         format.json { render json: { success: false, errors: errors }, status: :bad_request }
       end
     end
