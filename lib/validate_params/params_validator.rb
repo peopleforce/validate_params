@@ -126,7 +126,7 @@ module ValidateParams
             }
           end
         when "Integer"
-         if invalid_integer?(parameter_value)
+          if invalid_integer?(parameter_value)
             errors << {
               message: build_error_message(error_param_name(params_validation[:field]), params_validation[:type])
             }
@@ -153,7 +153,10 @@ module ValidateParams
 
       return if errors.empty?
 
-      render json: { success: false, errors: errors }, status: :unprocessable_entity
+      respond_to do |format|
+        format.html { return nothing: true, status: :bad_request }
+        format.json { render json: { success: false, errors: errors }, status: :bad_request }
+      end
     end
 
     def invalid_date?(value)
