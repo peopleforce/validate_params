@@ -139,7 +139,7 @@ end
 class TestClassWithSymbol < ActionController::Base
   include ValidateParams::Validatable
 
-  validate_params_for :index do |p|
+  validate_params_for :index, format: :json do |p|
     p.param :quantity, Integer
     p.param :date_of_birth, Date
     p.param :created_at, DateTime
@@ -153,7 +153,7 @@ end
 class TestClassWithHash < ActionController::Base
   include ValidateParams::Validatable
 
-  validate_params_for :index do |p|
+  validate_params_for :index, format: :json do |p|
     p.param :quantity, Hash do |pp|
       pp.param :eq, Integer
     end

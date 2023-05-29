@@ -123,7 +123,7 @@ end
 class TestClassDefaultWithSymbol < ActionController::Base
   include ValidateParams::Validatable
 
-  validate_params_for :index do |p|
+  validate_params_for :index, format: :json do |p|
     p.param :quantity, Integer, default: DEFAULT_INTEGER
     p.param :date_of_birth, Date, default: DEFAULT_DATE
     p.param :created_at, DateTime, default: DEFAULT_DATETIME
@@ -137,7 +137,7 @@ end
 class TestClassDefaultWithHash < ActionController::Base
   include ValidateParams::Validatable
 
-  validate_params_for :index do |p|
+  validate_params_for :index, format: :json do |p|
     p.param :count, default: proc { ( 2 * 2 ) }
     p.param :quantity, Hash do |pp|
       pp.param :eq, Integer, default: DEFAULT_INTEGER

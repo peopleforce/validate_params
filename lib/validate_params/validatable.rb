@@ -43,6 +43,9 @@ module ValidateParams
       self.class.instance_variable_get(:@controller_action) || nil
     end
 
+    def response_format
+      self.class.instance_variable_get(:@response_format) || nil
+    end
     private
 
     def build_error_message(param, type)
@@ -158,7 +161,7 @@ module ValidateParams
 
       return if errors.empty?
 
-      case @response_format
+      case response_format
       when :json
         render json: { success: false, errors: errors }, status: :bad_request
       else
