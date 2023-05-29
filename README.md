@@ -41,6 +41,23 @@ class TestController < ActionController::Base
   end
 end
 ```
+
+## Response
+
+If the parameters are valid, the controller action will be executed as normal. If the parameters are invalid, a **400 Bad Request** response will be returned with a JSON body containing the errors, or an empty HTML response.
+
+## Format
+
+By default responses are returned in JSON format. To return responses as an empty HTML response, change the :format options in the validate_params methods to :html.
+
+Example: 
+
+```ruby
+validate_params :index, format: :html do |p|
+    p.param :name, String, default: "John Doe"
+end
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rspec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
