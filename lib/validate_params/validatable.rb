@@ -1,7 +1,7 @@
-require "active_support/concern"
+# frozen_string_literal: true
 
 module ValidateParams
-  module ParamsValidator
+  module Validatable
     extend ::ActiveSupport::Concern
 
     included do
@@ -114,7 +114,7 @@ module ValidateParams
 
         case params_validation[:type].to_s
         when "Date"
-          if invalid_date?(parameter_value)
+          if ValidateParams::Types::Date.valid?(parameter_value)
             errors << {
               message: build_error_message(error_param_name(params_validation[:field]), params_validation[:type])
             }
@@ -158,17 +158,6 @@ module ValidateParams
       else
         head :bad_request
       end
-    end
-
-    def invalid_date?(value)
-      return true unless /\d{4}-\d{2}-\d{2}/.match?(value)
-
-      parsed_date = begin
-                      Date.strptime(value, "%Y-%m-%d")
-                    rescue StandardError
-                      nil
-                    end
-      parsed_date.blank? || parsed_date.year > 9999
     end
 
     def invalid_datetime?(value)
