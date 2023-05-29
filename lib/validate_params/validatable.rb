@@ -29,7 +29,7 @@ module ValidateParams
 
       def validate_params_for(controller_action, options = {}, &block)
         @controller_action = controller_action
-        @response_format = options[:format] || :html
+        @response_format = options[:format] || :json
 
         yield(self) if block
       end
