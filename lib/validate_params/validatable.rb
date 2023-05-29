@@ -27,8 +27,9 @@ module ValidateParams
         end
       end
 
-      def validate_params_for(request_action, &block)
-        @request_action = request_action
+      def validate_params_for(controller_action, options = {}, &block)
+        @controller_action = controller_action
+        @response_format = options[:format] || :html
 
         yield(self) if block
       end
@@ -38,8 +39,8 @@ module ValidateParams
       self.class.instance_variable_get(:@params_validations) || []
     end
 
-    def request_action
-      self.class.instance_variable_get(:@request_action) || nil
+    def controller_action
+      self.class.instance_variable_get(:@controller_action) || nil
     end
 
     private
@@ -93,7 +94,7 @@ module ValidateParams
     end
 
     def perform_validate_params
-      return unless request_action.present? && request_action == action_name.to_sym
+      return unless controller_action.present? && controller_action == action_name.to_sym
 
       errors = []
 
@@ -157,7 +158,8 @@ module ValidateParams
 
       return if errors.empty?
 
-      if request.nil? || request.format.json?
+      case @response_format
+      when :json
         render json: { success: false, errors: errors }, status: :bad_request
       else
         head :bad_request
