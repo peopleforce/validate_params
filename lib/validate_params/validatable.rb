@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require "validate_params/types/date"
+require "validate_params/types/date_time"
+require "validate_params/types/integer"
+
 module ValidateParams
   module Validatable
     extend ::ActiveSupport::Concern
@@ -114,19 +118,19 @@ module ValidateParams
 
         case params_validation[:type].to_s
         when "Date"
-          if ValidateParams::Types::Date.valid?(parameter_value)
+          unless ValidateParams::Types::Date.valid?(parameter_value)
             errors << {
               message: build_error_message(error_param_name(params_validation[:field]), params_validation[:type])
             }
           end
         when "DateTime"
-          if invalid_datetime?(parameter_value)
+          unless ValidateParams::Types::DateTime.valid?(parameter_value)
             errors << {
               message: build_error_message(error_param_name(params_validation[:field]), params_validation[:type])
             }
           end
         when "Integer"
-          if invalid_integer?(parameter_value)
+          unless ValidateParams::Types::Integer.valid?(parameter_value)
             errors << {
               message: build_error_message(error_param_name(params_validation[:field]), params_validation[:type])
             }
@@ -158,17 +162,6 @@ module ValidateParams
       else
         head :bad_request
       end
-    end
-
-    def invalid_datetime?(value)
-      Time.at(Integer(value))
-      false
-    rescue ArgumentError, TypeError
-      true
-    end
-
-    def invalid_integer?(value)
-      value.to_s !~ /\A[-+]?[0-9]+\z/
     end
 
     class ParamBuilder
