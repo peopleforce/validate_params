@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    validate-params (0.5.1)
+    validate-params (0.5.2)
       activesupport (>= 6.1.0)
 
 GEM
