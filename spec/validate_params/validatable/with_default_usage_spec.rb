@@ -1,13 +1,13 @@
 require "spec_helper"
 require "active_support"
 require "action_controller"
-require_relative "../../../lib/validate_params/params_validator"
+require_relative "../../../lib/validate_params/validatable"
 
 DEFAULT_INTEGER = 1234
 DEFAULT_DATE = "2022-01-01"
 DEFAULT_DATETIME = "1683749410"
 
-RSpec.describe ValidateParams::ParamsValidator, type: :controller do
+RSpec.describe ValidateParams::Validatable, type: :controller do
   subject do
     ctrl.send(:set_params_defaults)
     ctrl.send(:perform_validate_params)
@@ -121,9 +121,9 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
 end
 
 class TestClassDefaultWithSymbol < ActionController::Base
-  include ValidateParams::ParamsValidator
+  include ValidateParams::Validatable
 
-  validate_params_for :index do |p|
+  validate_params_for :index, format: :json do |p|
     p.param :quantity, Integer, default: DEFAULT_INTEGER
     p.param :date_of_birth, Date, default: DEFAULT_DATE
     p.param :created_at, DateTime, default: DEFAULT_DATETIME
@@ -135,9 +135,9 @@ class TestClassDefaultWithSymbol < ActionController::Base
 end
 
 class TestClassDefaultWithHash < ActionController::Base
-  include ValidateParams::ParamsValidator
+  include ValidateParams::Validatable
 
-  validate_params_for :index do |p|
+  validate_params_for :index, format: :json do |p|
     p.param :count, default: proc { ( 2 * 2 ) }
     p.param :quantity, Hash do |pp|
       pp.param :eq, Integer, default: DEFAULT_INTEGER

@@ -20,7 +20,7 @@ Definition of the validator with symbols as keys:
 
 ```ruby
 class TestController < ActionController::Base
-  include ValidateParams::ParamsValidator
+  include ValidateParams::Validatable
 
   validate_params :index do |p|
     p.param :name, String, default: "John Doe"

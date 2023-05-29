@@ -1,9 +1,9 @@
 require "spec_helper"
 require "active_support"
 require "action_controller"
-require_relative "../../../lib/validate_params/params_validator"
+require_relative "../../../lib/validate_params/validatable"
 
-RSpec.describe ValidateParams::ParamsValidator, type: :controller do
+RSpec.describe ValidateParams::Validatable, type: :controller do
   subject do
     ctrl.send(:set_params_defaults)
     ctrl.send(:perform_validate_params)
@@ -137,9 +137,9 @@ RSpec.describe ValidateParams::ParamsValidator, type: :controller do
 end
 
 class TestClassWithSymbol < ActionController::Base
-  include ValidateParams::ParamsValidator
+  include ValidateParams::Validatable
 
-  validate_params_for :index do |p|
+  validate_params_for :index, format: :json do |p|
     p.param :quantity, Integer
     p.param :date_of_birth, Date
     p.param :created_at, DateTime
@@ -151,9 +151,9 @@ class TestClassWithSymbol < ActionController::Base
 end
 
 class TestClassWithHash < ActionController::Base
-  include ValidateParams::ParamsValidator
+  include ValidateParams::Validatable
 
-  validate_params_for :index do |p|
+  validate_params_for :index, format: :json do |p|
     p.param :quantity, Hash do |pp|
       pp.param :eq, Integer
     end
