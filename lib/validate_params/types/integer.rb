@@ -4,7 +4,7 @@ module ValidateParams
   class Types
     class Integer
       def self.valid?(value)
-        value.to_s == /\A[-+]?\d+\z/
+        /\A[-+]?\d+\z/ === value.to_s
       end
 
       def self.cast(raw_value)

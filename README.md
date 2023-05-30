@@ -26,6 +26,7 @@ class TestController < ActionController::Base
     p.param :name, String, default: "John Doe"
     p.param :occurred_on, Date, required: true, default: proc { Date.today }
     p.param :quantity, Integer, required: true, in: [1, 2, 3]
+    p.param :user_ids, Array, of: String, required: true, default: [1, 2, 3]
     p.param :date_of_birth, Hash do |pp|
       pp.param :gt, Date
       pp.param :lt, Date

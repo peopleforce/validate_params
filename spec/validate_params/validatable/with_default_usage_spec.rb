@@ -64,6 +64,19 @@ RSpec.describe ValidateParams::Validatable do
           expect(request_params[:user_ids]).to eq([1, 2, 3])
         end
       end
+
+      context "when user_ids of: Integer passed in as invalid strings" do
+        let(:request_params) { { user_ids: %w[1a 2 3] } }
+
+        it "returns success" do
+          subject
+          expect(subject).to match hash_including(
+            json: hash_including(
+              success: false
+            )
+          )
+        end
+      end
     end
   end
 
