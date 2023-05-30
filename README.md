@@ -48,6 +48,18 @@ end
 
 If the parameters are valid, the controller action will be executed as normal. If the parameters are invalid, a **400 Bad Request** response will be returned with a JSON body containing the errors, or an empty HTML response.
 
+```json
+{
+    "success": false,
+    "errors": [
+        {
+            "message": "hired_on must be a valid Date"
+        },
+      
+    ]
+}
+```
+
 ## Format
 
 By default responses are returned in JSON format. To return responses as an empty HTML response, change the :format options in the validate_params methods to :html.
