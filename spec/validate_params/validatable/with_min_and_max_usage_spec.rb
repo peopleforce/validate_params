@@ -10,7 +10,7 @@ RSpec.describe ValidateParams::Validatable do
   let(:request_params) do
     {
       date_of_birth: date_of_birth,
-      created_at: created_at,
+      created_at: created_at
     }
   end
 
@@ -84,7 +84,6 @@ RSpec.describe ValidateParams::Validatable do
 
     context "when date_of_birth is invalid" do
       let(:date_of_birth) { "NOT VALID DATE" }
-
 
       it "render json error with localized message" do
         expect(subject).to match hash_including(
