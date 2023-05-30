@@ -147,6 +147,17 @@ RSpec.describe ValidateParams::Validatable do
           expect(request_params.dig(:created_at, :gt)).to eq(Time.at(1685406514))
         end
       end
+
+      context "when array with reject_blank" do
+        let(:request_params) { super().merge(relation_ids: relation_ids) }
+        let(:relation_ids) { ["1", "2", "3", nil, ""] }
+
+        it "rejects blank values" do
+          subject
+
+          expect(request_params[:relation_ids]).to eq(["1", "2", "3"])
+        end
+      end
     end
   end
 end

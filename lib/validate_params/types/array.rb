@@ -12,13 +12,17 @@ module ValidateParams
         end
       end
 
-      def self.cast(raw_value, of: String)
-        case of.to_s
-        when "Integer"
-          raw_value.map { |item| Types::Integer.cast(item) }
-        else
-          raw_value
-        end
+      def self.cast(raw_value, of: String, reject_blank: false, **)
+        value =
+          case of.to_s
+          when "Integer"
+            raw_value.map { |item| Types::Integer.cast(item) }
+          else
+            raw_value
+          end
+
+        value.reject!(&:blank?) if reject_blank
+        value
       end
     end
   end
