@@ -155,7 +155,7 @@ RSpec.describe ValidateParams::Validatable do
         it "rejects blank values" do
           subject
 
-          expect(request_params[:relation_ids]).to eq(["1", "2", "3"])
+          expect(request_params[:relation_ids]).to eq([1, 2, 3])
         end
       end
     end

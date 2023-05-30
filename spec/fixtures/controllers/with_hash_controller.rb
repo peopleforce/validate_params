@@ -14,7 +14,7 @@ class WithHashController < BaseTestController
       pp.param :gt, DateTime
       pp.param :lt, DateTime
     end
-    p.param :relation_ids, Array, reject_blank: true
+    p.param :relation_ids, Array, of: Integer, reject_blank: true
   end
 
   def index
