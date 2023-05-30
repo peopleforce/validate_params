@@ -100,7 +100,7 @@ module ValidateParams
                                                     else
                                                       Types.const_get(params_validation[:type].name).cast(value)
                                                     end
-                }
+                }.with_indifferent_access
               )
             end
           else
