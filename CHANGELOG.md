@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+## [0.7.0] - 2023-05-30
+
+- Added type support for casting params into types
+- Added support for Array of types [String, Integer]
+
 ## [0.5.2] - 2023-05-29
 
 - Support to handle HTML and JSON response formats

@@ -360,3 +360,6 @@ Style/StringChars:
 
 Style/RedundantInitialize:
   Enabled: true
+
+Style/CaseEquality:
+  Enabled: false

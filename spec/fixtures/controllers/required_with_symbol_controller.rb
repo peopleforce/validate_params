@@ -7,6 +7,7 @@ class RequiredWithSymbolController < BaseTestController
     p.param :quantity, Integer, required: true
     p.param :date_of_birth, Date, required: true
     p.param :created_at, DateTime, required: true
+    p.param :states, Array, required: true
   end
 
   def index
