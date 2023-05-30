@@ -29,6 +29,11 @@ module ValidateParams
       end
 
       private
+         def array
+            return if Types::Array.valid?(@value, of: @options[:of])
+            @errors << {message: error_message}
+         end
+
         def date
           return if Types::Date.valid?(@value)
 

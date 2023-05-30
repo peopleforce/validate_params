@@ -23,6 +23,7 @@ RSpec.describe ValidateParams::Validatable do
           expect(request_params[:quantity]).to eq(1234)
           expect(request_params[:date_of_birth]).to eq(Date.parse(date_of_birth))
           expect(request_params[:created_at]).to eq(Time.at(created_at.to_i))
+          expect(request_params[:user_ids]).to eq([1])
         end
       end
 
@@ -43,6 +44,24 @@ RSpec.describe ValidateParams::Validatable do
           subject
 
           expect(request_params[:created_at]).to eq(Time.at(created_at.to_i))
+        end
+      end
+
+      context "when user_ids of: Integer passed in as integers" do
+        let(:request_params) { { user_ids: [1,2,3] } }
+
+        it "returns success" do
+          subject
+          expect(request_params[:user_ids]).to eq([1,2,3])
+        end
+      end
+
+      context "when user_ids of: Integer passed in as strings" do
+        let(:request_params) { { user_ids: ["1","2","3"] } }
+
+        it "returns success" do
+          subject
+          expect(request_params[:user_ids]).to eq([1,2,3])
         end
       end
     end

@@ -3,6 +3,7 @@
 require "validate_params/types/date"
 require "validate_params/types/date_time"
 require "validate_params/types/integer"
+require "validate_params/types/array"
 require_relative "param_builder"
 require_relative "param_validator"
 
@@ -55,7 +56,7 @@ module ValidateParams
 
     def set_params_defaults
       params_validations.each do |params_validation|
-        next if params_validation[:options][:default].blank?
+        next if !params_validation[:options].has_key?(:default)
 
         if params_validation[:field].is_a?(Hash)
           params_validation[:field].each_key do |key|
@@ -78,6 +79,7 @@ module ValidateParams
                   end
 
           params[params_validation[:field]] ||= value
+
         end
       end
     end
@@ -93,7 +95,11 @@ module ValidateParams
 
             params.deep_merge!(
               key => {
-                params_validation[:field][key] => Types.const_get(params_validation[:type].name).cast(value)
+                params_validation[:field][key] => if params_validation[:type].name == "Array"
+                                                    Types.const_get(params_validation[:type].name).cast(value, of: params_validation[:options][:of])
+                                                  else
+                                                    Types.const_get(params_validation[:type].name).cast(value)
+                                                  end
               }
             )
           end
@@ -101,7 +107,11 @@ module ValidateParams
           value = params[params_validation[:field]]
           next if value.blank?
 
-          params[params_validation[:field]] = Types.const_get(params_validation[:type].name).cast(value)
+          params[params_validation[:field]] = if params_validation[:type].name == "Array"
+                                                Types.const_get(params_validation[:type].name).cast(value, of: params_validation[:options][:of])
+                                              else
+                                                Types.const_get(params_validation[:type].name).cast(value)
+                                              end
         end
       end
     end
