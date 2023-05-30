@@ -10,7 +10,7 @@ module ValidateParams
         false
       end
 
-      def self.cast(raw_value)
+      def self.cast(raw_value, **)
         return raw_value if raw_value.is_a?(::Time)
 
         Time.at(Integer(raw_value))

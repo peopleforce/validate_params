@@ -20,7 +20,7 @@ module ValidateParams
         true
       end
 
-      def self.cast(raw_value)
+      def self.cast(raw_value, **)
         return raw_value if raw_value.is_a?(::Date)
 
         ::Date.strptime(raw_value.to_s, FORMAT)
