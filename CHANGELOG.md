@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+## [0.8.0] - 2023-05-30
+
+- Added support for passing array of actions into validate_params_for to run on multiple actions
+- Added support for Array type to use option reject_blank: true to remove blank values from array
+
 ## [0.7.0] - 2023-05-30
 
 - Added type support for casting params into types
