@@ -3,10 +3,13 @@
 module ValidateParams
   class Types
     class Array
-      def self.valid?(value, of: String)
+      def self.valid?(value, of: String, reject_blank: false, **)
+        val = value
+        val = val.reject(&:blank?) if reject_blank
+
         case of.to_s
         when "Integer"
-          value.all? { |item| Types::Integer.valid?(item) }
+          val.all? { |item| Types::Integer.valid?(item) }
         else
           true
         end
