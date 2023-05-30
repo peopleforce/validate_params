@@ -60,7 +60,7 @@ module ValidateParams
           if params_validation[:field].is_a?(Hash)
             params_validation[:field].each_key do |key|
               # Skip in case hash is configured and string is passed
-              next if params[key].is_a? Hash
+              next if hashlike?(params[key])
               next if params.dig(key, params_validation[:field][key])
 
               value = if params_validation[:options][:default].is_a?(Proc)
@@ -68,7 +68,9 @@ module ValidateParams
                       else
                         params_validation[:options][:default]
                       end
-              params.deep_merge!(key => { params_validation[:field][key] => value })
+
+              params[key] ||= {}
+              params[key][params_validation[:field][key]] = value
             end
           else
             value = if params_validation[:options][:default].is_a?(Proc)
@@ -78,40 +80,27 @@ module ValidateParams
                     end
 
             params[params_validation[:field]] ||= value
-
           end
         end
       end
 
       def cast_param_values
+        ActionController::Parameters
         params_validations.each do |params_validation|
           if params_validation[:field].is_a?(Hash)
             params_validation[:field].each_key do |key|
-              next unless params[key].is_a?(Hash)
+              next unless hashlike?(params[key])
 
               value = params.dig(key, params_validation[:field][key])
               next if value.blank?
 
-              params.update(
-                key => {
-                  params_validation[:field][key] => if params_validation[:type].name == "Array"
-                                                      Types.const_get(params_validation[:type].name).cast(value,
-                                                                                                          of: params_validation[:options][:of])
-                                                    else
-                                                      Types.const_get(params_validation[:type].name).cast(value)
-                                                    end
-                }.with_indifferent_access
-              )
+              params[key][params_validation[:field][key]] = Types.const_get(params_validation[:type].name).cast(value, of: params_validation.dig(:options, :of))
             end
           else
             value = params[params_validation[:field]]
             next if value.blank?
 
-            params[params_validation[:field]] = if params_validation[:type].name == "Array"
-                                                  Types.const_get(params_validation[:type].name).cast(value, of: params_validation[:options][:of])
-                                                else
-                                                  Types.const_get(params_validation[:type].name).cast(value)
-                                                end
+            params[params_validation[:field]] = Types.const_get(params_validation[:type].name).cast(value, of: params_validation.dig(:options, :of))
           end
         end
       end
@@ -153,6 +142,10 @@ module ValidateParams
         else
           render json: { success: false, errors: errors }, status: :bad_request
         end
+      end
+
+      def hashlike?(obj)
+        obj.is_a?(Hash) || obj.is_a?(ActionController::Parameters)
       end
   end
 end
