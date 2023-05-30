@@ -30,4 +30,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 3.0"
 
   spec.add_dependency "activesupport", ">= 6.1.0"
+  spec.add_dependency "i18n", ">= 1.6"
 end
