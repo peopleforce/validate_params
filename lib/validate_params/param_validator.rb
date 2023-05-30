@@ -61,7 +61,7 @@ module ValidateParams
         end
 
         def validate_inclusion
-          return if @options[:in].include?(value)
+          return if @options[:in].include?(@value)
 
           @errors << {
             message: I18n.t("validate_params.invalid_in", param: error_param_name),
