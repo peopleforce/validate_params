@@ -137,6 +137,16 @@ RSpec.describe ValidateParams::Validatable do
           )
         end
       end
+
+      context "when datetime param valid" do
+        let(:created_at) { "1685406514" }
+
+        it "return success" do
+          subject
+          expect(request_params.dig(:created_at, :gt)).to be_a(Time)
+          expect(request_params.dig(:created_at, :gt)).to eq(Time.at(1685406514))
+        end
+      end
     end
   end
 end

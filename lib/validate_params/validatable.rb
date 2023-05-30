@@ -92,7 +92,7 @@ module ValidateParams
               value = params.dig(key, params_validation[:field][key])
               next if value.blank?
 
-              params.deep_merge!(
+              params.update(
                 key => {
                   params_validation[:field][key] => if params_validation[:type].name == "Array"
                                                       Types.const_get(params_validation[:type].name).cast(value,
