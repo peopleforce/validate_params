@@ -3,7 +3,7 @@
 require_relative "base_test_controller"
 
 class WithHashController < BaseTestController
-  validate_params_for :index, format: :json do |p|
+  validate_params_for [:index, :create], format: :json do |p|
     p.param :quantity, Hash do |pp|
       pp.param :eq, Integer
     end
@@ -14,6 +14,7 @@ class WithHashController < BaseTestController
       pp.param :gt, DateTime
       pp.param :lt, DateTime
     end
+    p.param :relation_ids, Array, reject_blank: true
   end
 
   def index

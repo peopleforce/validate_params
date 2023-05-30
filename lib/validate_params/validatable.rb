@@ -14,133 +14,116 @@ module ValidateParams
     extend ::ActiveSupport::Concern
 
     included do
-      before_action :set_params_defaults
       before_action :perform_validate_params
     end
 
     class_methods do
-      attr_accessor :params_validations, :method
+      attr_reader :params_validations
 
-      def param(field, type, options = {}, &block)
-        @params_validations ||= []
+      def validate_params_for(action, options = {}, &block)
+        options[:format] ||= :json
+        @params_validations ||= {}
 
-        if block
-          param_builder = ParamBuilder.new(field)
-          @params_validations += yield(param_builder)
-        else
-          @params_validations << ParamBuilder.new.param(field, type, options)
+        Array(action).each do |act|
+          @params_validations[act] ||= {options: options, validations: []}
+
+          yield(ParamBuilder.new(validations: @params_validations[act][:validations])) if block
         end
-      end
-
-      def validate_params_for(controller_action, options = {}, &block)
-        @controller_action = controller_action
-        @response_format = options[:format] || :json
-
-        yield(self) if block
       end
     end
 
     def params_validations
-      self.class.instance_variable_get(:@params_validations) || []
-    end
-
-    def controller_action
-      self.class.instance_variable_get(:@controller_action) || nil
-    end
-
-    def response_format
-      self.class.instance_variable_get(:@response_format) || nil
+      self.class.params_validations || {}
     end
 
     private
-      def set_params_defaults
-        params_validations.each do |params_validation|
-          next unless params_validation[:options].key?(:default)
-
-          if params_validation[:field].is_a?(Hash)
-            params_validation[:field].each_key do |key|
-              # Skip in case hash is configured and string is passed
-              next if hashlike?(params[key])
-              next if params.dig(key, params_validation[:field][key])
-
-              value = if params_validation[:options][:default].is_a?(Proc)
-                        params_validation[:options][:default].call
-                      else
-                        params_validation[:options][:default]
-                      end
-
-              params[key] ||= {}
-              params[key][params_validation[:field][key]] = value
-            end
-          else
-            value = if params_validation[:options][:default].is_a?(Proc)
-                      params_validation[:options][:default].call
-                    else
-                      params_validation[:options][:default]
-                    end
-
-            params[params_validation[:field]] ||= value
-          end
-        end
-      end
-
-      def cast_param_values
-        ActionController::Parameters
-        params_validations.each do |params_validation|
-          if params_validation[:field].is_a?(Hash)
-            params_validation[:field].each_key do |key|
-              next unless hashlike?(params[key])
-
-              value = params.dig(key, params_validation[:field][key])
-              next if value.blank?
-
-              params[key][params_validation[:field][key]] = Types.const_get(params_validation[:type].name).cast(value, of: params_validation.dig(:options, :of))
-            end
-          else
-            value = params[params_validation[:field]]
-            next if value.blank?
-
-            params[params_validation[:field]] = Types.const_get(params_validation[:type].name).cast(value, of: params_validation.dig(:options, :of))
-          end
-        end
-      end
-
       def perform_validate_params
-        return unless controller_action.present? && controller_action == action_name.to_sym
+        return unless params_validations.key?(action_name.to_sym)
 
         errors = []
+        config = params_validations[action_name.to_sym]
 
-        params_validations.each do |params_validation|
-          # Skip in case hash is configured and string is passed
-          next if params_validation[:field].is_a?(Hash) &&
-            params[params_validation[:field].keys.first].is_a?(String)
+        config[:validations].each do |validation|
+          apply_default_values(validation)
 
-          parameter_value = if params_validation[:field].is_a? Hash
-                              params.dig(params_validation[:field].keys.first,
-                                         params_validation[:field][params_validation[:field].keys.first])
+          next if validation[:field].is_a?(Hash) &&
+            params[validation[:field].keys.first].is_a?(String)
+
+          parameter_value = if validation[:field].is_a? Hash
+                              params.dig(validation[:field].keys.first,
+                                         validation[:field][validation[:field].keys.first])
                             else
-                              params[params_validation[:field]]
+                              params[validation[:field]]
                             end
 
           ParamValidator.call(
-            type: params_validation[:type],
-            field: params_validation[:field],
+            type: validation[:type],
+            field: validation[:field],
             value: parameter_value,
             errors: errors,
-            options: params_validation[:options]
+            options: validation[:options]
           )
         end
 
         if errors.empty?
-          cast_param_values
+          cast_param_values(config[:validations])
           return
         end
 
-        case response_format
+        case config.dig(:options, :format)
         when :html
           head :bad_request
         else
           render json: { success: false, errors: errors }, status: :bad_request
+        end
+      end
+
+      def apply_default_values(validation)
+        return unless validation[:options].key?(:default)
+
+        if validation[:field].is_a?(Hash)
+          validation[:field].each_key do |key|
+            # Skip in case hash is configured and string is passed
+            next if hashlike?(params[key])
+            next if params.dig(key, validation[:field][key])
+
+            value = if validation[:options][:default].is_a?(Proc)
+                      validation[:options][:default].call
+                    else
+                      validation[:options][:default]
+                    end
+
+            params[key] ||= {}
+            params[key][validation[:field][key]] = value
+          end
+        else
+          value = if validation[:options][:default].is_a?(Proc)
+                    validation[:options][:default].call
+                  else
+                    validation[:options][:default]
+                  end
+
+          params[validation[:field]] ||= value
+        end
+      end
+
+      def cast_param_values(validations)
+        validations.each do |validation|
+          if validation[:field].is_a?(Hash)
+            validation[:field].each_key do |key|
+              next unless hashlike?(params[key])
+
+              value = params.dig(key, validation[:field][key])
+              next if value.blank?
+
+              params[key][validation[:field][key]] = Types.const_get(validation[:type].name).cast(value, **validation.fetch(:options, {}))
+            end
+          else
+            value = params[validation[:field]]
+            next if value.blank?
+
+            params[validation[:field]] = Types.const_get(validation[:type].name).cast(value, **validation.fetch(:options, {}))
+          end
         end
       end
 

@@ -16,7 +16,7 @@ class BaseTestController < ActionController::Base
   end
 
   def action_name
-    controller_action
+    params_validations.keys.first
   end
 
   private
