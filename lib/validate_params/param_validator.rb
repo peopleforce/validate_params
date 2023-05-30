@@ -30,7 +30,7 @@ module ValidateParams
 
       private
         def array
-          return if Types::Array.valid?(@value, of: @options[:of])
+          return if Types::Array.valid?(@value, **@options)
 
           @errors << { message: error_message }
         end

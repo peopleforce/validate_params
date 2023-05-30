@@ -3,26 +3,28 @@
 module ValidateParams
   class Types
     class Array
-      def self.valid?(value, of: String)
+      def self.valid?(value, of: String, reject_blank: false, **)
+        val = value
+        val = val.reject(&:blank?) if reject_blank
+
         case of.to_s
         when "Integer"
-          value.all? { |item| Types::Integer.valid?(item) }
+          val.all? { |item| Types::Integer.valid?(item) }
         else
           true
         end
       end
 
       def self.cast(raw_value, of: String, reject_blank: false, **)
-        value =
-          case of.to_s
-          when "Integer"
-            raw_value.map { |item| Types::Integer.cast(item) }
-          else
-            raw_value
-          end
+        value = raw_value
+        value = value.reject!(&:blank?) if reject_blank
 
-        value.reject!(&:blank?) if reject_blank
-        value
+        case of.to_s
+        when "Integer"
+          value.map { |item| Types::Integer.cast(item) }
+        else
+          value
+        end
       end
     end
   end
