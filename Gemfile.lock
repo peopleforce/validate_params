@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    validate-params (0.7.1)
+    validate-params (0.8.0)
       activesupport (>= 6.1.0)
       i18n (>= 1.6)
 
