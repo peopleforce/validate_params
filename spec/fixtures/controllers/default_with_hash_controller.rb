@@ -4,7 +4,7 @@ require_relative "base_test_controller"
 
 class DefaultWithHashController < BaseTestController
   validate_params_for :index, format: :json do |p|
-    p.param :count, default: proc { ( 2 * 2 ) }
+    p.param :count, default: proc { (2 * 2) }
     p.param :quantity, Hash do |pp|
       pp.param :eq, Integer, default: 1234
     end

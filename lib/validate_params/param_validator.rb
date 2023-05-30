@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'active_support/inflector'
+require "active_support/inflector"
 
 module ValidateParams
   module Validatable
@@ -29,26 +29,27 @@ module ValidateParams
       end
 
       private
-         def array
-            return if Types::Array.valid?(@value, of: @options[:of])
-            @errors << {message: error_message}
-         end
+        def array
+          return if Types::Array.valid?(@value, of: @options[:of])
+
+          @errors << { message: error_message }
+        end
 
         def date
           return if Types::Date.valid?(@value)
 
-          @errors << {message: error_message}
+          @errors << { message: error_message }
         end
 
         def date_time
           return if Types::DateTime.valid?(@value)
 
-          @errors << {message: error_message}
+          @errors << { message: error_message }
         end
 
         def integer
           unless Types::Integer.valid?(@value)
-            @errors << {message: error_message}
+            @errors << { message: error_message }
             return
           end
 

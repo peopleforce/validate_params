@@ -121,8 +121,8 @@ RSpec.describe ValidateParams::Validatable do
             json: hash_including(
               success: false,
               errors: array_including(
-                {message: "created_at[gt] must be a valid DateTime"},
-                {message: "created_at[lt] must be a valid DateTime"}
+                { message: "created_at[gt] must be a valid DateTime" },
+                { message: "created_at[lt] must be a valid DateTime" }
               )
             )
           )

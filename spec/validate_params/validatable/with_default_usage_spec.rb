@@ -48,20 +48,20 @@ RSpec.describe ValidateParams::Validatable do
       end
 
       context "when user_ids of: Integer passed in as integers" do
-        let(:request_params) { { user_ids: [1,2,3] } }
+        let(:request_params) { { user_ids: [1, 2, 3] } }
 
         it "returns success" do
           subject
-          expect(request_params[:user_ids]).to eq([1,2,3])
+          expect(request_params[:user_ids]).to eq([1, 2, 3])
         end
       end
 
       context "when user_ids of: Integer passed in as strings" do
-        let(:request_params) { { user_ids: ["1","2","3"] } }
+        let(:request_params) { { user_ids: %w[1 2 3] } }
 
         it "returns success" do
           subject
-          expect(request_params[:user_ids]).to eq([1,2,3])
+          expect(request_params[:user_ids]).to eq([1, 2, 3])
         end
       end
     end
