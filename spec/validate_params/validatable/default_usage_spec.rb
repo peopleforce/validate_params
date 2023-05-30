@@ -45,7 +45,16 @@ RSpec.describe ValidateParams::Validatable do
         end
       end
 
-      context "when date param invalid" do
+      context "when datetime param valid" do
+        let(:request_params) { { created_at: "16854514" } }
+
+        it "return success" do
+          subject
+          expect(request_params[:created_at]).to be_a(Time)
+        end
+      end
+
+      context "when datetime param invalid" do
         let(:created_at) { "invalid" }
 
         it "render json error with localized message" do
@@ -113,7 +122,7 @@ RSpec.describe ValidateParams::Validatable do
         end
       end
 
-      context "when date param invalid" do
+      context "when datetime param invalid" do
         let(:created_at) { "invalid" }
 
         it "render json error with localized message" do

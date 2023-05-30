@@ -68,7 +68,7 @@ RSpec.describe ValidateParams::Validatable do
       context "when user_ids of: Integer passed in as invalid strings" do
         let(:request_params) { { user_ids: %w[1a 2 3] } }
 
-        it "returns success" do
+        it "returns failure" do
           subject
           expect(subject).to match hash_including(
             json: hash_including(
@@ -95,6 +95,7 @@ RSpec.describe ValidateParams::Validatable do
         it "returns success" do
           subject
 
+          expect(request_params.dig(:quantity, :eq)).to be_a(Integer)
           expect(request_params.dig(:quantity, :eq)).to eq(1234)
         end
       end
@@ -110,6 +111,7 @@ RSpec.describe ValidateParams::Validatable do
         it "returns success" do
           subject
 
+          expect(request_params.dig(:date_of_birth, :gt)).to be_a(Date)
           expect(request_params.dig(:date_of_birth, :gt)).to eq(Date.parse(date_of_birth))
         end
       end
@@ -124,7 +126,7 @@ RSpec.describe ValidateParams::Validatable do
 
         it "returns success" do
           subject
-
+          expect(request_params.dig(:created_at, :lt)).to be_a(Time)
           expect(request_params.dig(:created_at, :lt)).to eq(Time.at(created_at.to_i))
         end
       end
