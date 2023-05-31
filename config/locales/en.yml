@@ -3,3 +3,5 @@ en:
     required: "%{param} is required"
     invalid_type: "%{param} must be a valid %{type}"
     invalid_in: "%{param} is an invalid value"
+    more_than_max: "%{param} cannot be more than maximum"
+    less_than_min: "%{param} cannot be less than minimum"

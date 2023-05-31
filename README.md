@@ -29,11 +29,11 @@ class TestController < ActionController::Base
     p.param :user_ids, Array, of: Integer, default: [1, 2, 3]
     p.param :states, Array, of: String, default: ["active", "inactive"], reject_blank: true
     p.param :date_of_birth, Hash do |pp|
-      pp.param :gt, Date
+      pp.param :gt, Date, min: Date.new(2020, 1, 1), max: Date.new(2021, 1, 1)
       pp.param :lt, Date
     end
     p.param :created_at, Hash do |pp|
-      pp.param :lt, DateTime
+      pp.param :lt, DateTime, min: DateTime.new(2020, 1, 1), max: DateTime.new(2021, 1, 1)
       pp.param :gt, DateTime
     end
   end
@@ -55,7 +55,7 @@ If the parameters are valid, the controller action will be executed as normal. I
         {
             "message": "hired_on must be a valid Date"
         },
-      
+
     ]
 }
 ```
@@ -64,7 +64,7 @@ If the parameters are valid, the controller action will be executed as normal. I
 
 By default responses are returned in JSON format. To return responses as an empty HTML response, change the :format options in the validate_params methods to :html.
 
-Example: 
+Example:
 
 ```ruby
 validate_params :index, format: :html do |p|

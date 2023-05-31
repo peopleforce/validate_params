@@ -36,15 +36,27 @@ module ValidateParams
         end
 
         def date
-          return if Types::Date.valid?(@value)
+          if !Types::Date.valid?(@value)
+            @errors << { message: error_message }
+            return
+          end
 
-          @errors << { message: error_message }
+          formatted_value = Types::Date.cast(@value)
+
+          validate_min(formatted_value) if @options[:min].present?
+          validate_max(formatted_value) if @options[:max].present?
         end
 
         def date_time
-          return if Types::DateTime.valid?(@value)
+          if !Types::DateTime.valid?(@value)
+            @errors << { message: error_message }
+            return
+          end
 
-          @errors << { message: error_message }
+          formatted_value = Types::DateTime.cast(@value)
+
+          validate_min(formatted_value) if @options[:min].present?
+          validate_max(formatted_value) if @options[:max].present?
         end
 
         def integer
@@ -66,6 +78,24 @@ module ValidateParams
           @errors << {
             message: I18n.t("validate_params.invalid_in", param: error_param_name),
             valid_values: @options[:in]
+          }
+        end
+
+        def validate_min(value)
+          return if @options[:min] <= value
+
+          @errors << {
+            message: I18n.t("validate_params.less_than_min", param: error_param_name),
+            min: @options[:min]
+          }
+        end
+
+        def validate_max(value)
+          return if @options[:max] >= value
+
+          @errors << {
+            message: I18n.t("validate_params.more_than_max", param: error_param_name),
+            max: @options[:max]
           }
         end
 
