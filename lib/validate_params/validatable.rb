@@ -26,7 +26,7 @@ module ValidateParams
         @params_validations ||= {}
 
         Array(action).each do |act|
-          @params_validations[act] ||= {options: options, validations: []}
+          @params_validations[act] ||= { options: options, validations: [] }
 
           yield(ParamBuilder.new(validations: @params_validations[act][:validations])) if block
         end

@@ -102,11 +102,11 @@ RSpec.describe ValidateParams::Validatable do
 
       it "render json error with localized message" do
         expect(subject).to match hash_including(
-                                   json: hash_including(
-                                     success: false,
-                                     errors: [hash_including(message: "quantity cannot be less than minimum")]
-                                   )
-                                 )
+          json: hash_including(
+            success: false,
+            errors: [hash_including(message: "quantity cannot be less than minimum")]
+          )
+        )
       end
     end
 
@@ -115,11 +115,11 @@ RSpec.describe ValidateParams::Validatable do
 
       it "render json error with localized message" do
         expect(subject).to match hash_including(
-                                   json: hash_including(
-                                     success: false,
-                                     errors: [hash_including(message: "quantity cannot be more than maximum")]
-                                   )
-                                 )
+          json: hash_including(
+            success: false,
+            errors: [hash_including(message: "quantity cannot be more than maximum")]
+          )
+        )
       end
     end
 
@@ -128,11 +128,11 @@ RSpec.describe ValidateParams::Validatable do
 
       it "render json error with localized message" do
         expect(subject).to match hash_including(
-                                   json: hash_including(
-                                     success: false,
-                                     errors: [hash_including(message: "quantity must be a valid Date")]
-                                   )
-                                 )
+          json: hash_including(
+            success: false,
+            errors: [hash_including(message: "quantity must be a valid Integer")]
+          )
+        )
       end
     end
 
