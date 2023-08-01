@@ -65,7 +65,11 @@ module ValidateParams
             return
           end
 
+          formatted_value = Types::Integer.cast(@value)
+
           validate_inclusion if @options[:in].present?
+          validate_min(formatted_value) if @options[:min].present?
+          validate_max(formatted_value) if @options[:max].present?
         end
 
         def string

@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.9.0] - 2023-08-02
+
+- Add :min and :max options to validate param values for Integer types
+
 ## [0.8.0] - 2023-05-30
 
 - Added support for passing array of actions into validate_params_for to run on multiple actions
@@ -17,9 +21,9 @@
 ## [0.5.0] - 2023-05-15
 
 - Support for Proc as options for default to set param default values
-`- Add :in options to validate param values against a list of values for String and Integer types
+- Add :in options to validate param values against a list of values for String and Integer types
 - Updated JSON formats of error messages to be more consistent
-`
+
 ## [0.3.0] - 2023-05-12
 
 - Add required attribute support
