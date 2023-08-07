@@ -7,10 +7,12 @@ RSpec.describe ValidateParams::Validatable do
 
   let(:date_of_birth) { "2022-01-01" }
   let(:created_at) { "1683749410" }
+  let(:quantity) { 5 }
   let(:request_params) do
     {
       date_of_birth: date_of_birth,
-      created_at: created_at
+      created_at: created_at,
+      quantity: quantity
     }
   end
 
@@ -90,6 +92,45 @@ RSpec.describe ValidateParams::Validatable do
           json: hash_including(
             success: false,
             errors: [hash_including(message: "date_of_birth must be a valid Date")]
+          )
+        )
+      end
+    end
+
+    context "when date_of_birth is less than minimum" do
+      let(:quantity) { 0 }
+
+      it "render json error with localized message" do
+        expect(subject).to match hash_including(
+          json: hash_including(
+            success: false,
+            errors: [hash_including(message: "quantity cannot be less than minimum")]
+          )
+        )
+      end
+    end
+
+    context "when quantity is more than maximum" do
+      let(:quantity) { 100 }
+
+      it "render json error with localized message" do
+        expect(subject).to match hash_including(
+          json: hash_including(
+            success: false,
+            errors: [hash_including(message: "quantity cannot be more than maximum")]
+          )
+        )
+      end
+    end
+
+    context "when quantity is invalid" do
+      let(:quantity) { "NOT VALID INTEGER" }
+
+      it "render json error with localized message" do
+        expect(subject).to match hash_including(
+          json: hash_including(
+            success: false,
+            errors: [hash_including(message: "quantity must be a valid Integer")]
           )
         )
       end
