@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.10.0] - 2023-08-28
+
+- Added support for IO type to validate file uploads
+
 ## [0.9.0] - 2023-08-02
 
 - Add :min and :max options to validate param values for Integer types

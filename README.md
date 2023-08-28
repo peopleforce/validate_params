@@ -28,6 +28,7 @@ class TestController < ActionController::Base
     p.param :quantity, Integer, required: true, in: [1, 2, 3]
     p.param :user_ids, Array, of: Integer, default: [1, 2, 3]
     p.param :states, Array, of: String, default: ["active", "inactive"], reject_blank: true
+    p.param :file, IO, min: 1.byte, max: 1.megabyte
     p.param :date_of_birth, Hash do |pp|
       pp.param :gt, Date, min: Date.new(2020, 1, 1), max: Date.new(2021, 1, 1)
       pp.param :lt, Date
