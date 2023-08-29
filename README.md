@@ -55,8 +55,8 @@ Here are the following supported types along with operations supported.
 - Date (required, default, min, max)
 - DateTime (required, default, min, max)
 - IO (required, min, max)
-- Array
-- Hash
+- Array of: (String|Integer) (default, reject_blank)
+- Hash - Nested block of types
 
 
 ## Response
