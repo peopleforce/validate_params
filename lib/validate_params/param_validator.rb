@@ -76,6 +76,18 @@ module ValidateParams
           validate_inclusion if @options[:in].present?
         end
 
+        def io
+          unless Types::IO.valid?(@value)
+            @errors << { message: error_message }
+            return
+          end
+
+          formatted_value = Types::IO.cast(@value)
+
+          validate_min(formatted_value) if @options[:min].present?
+          validate_max(formatted_value) if @options[:max].present?
+        end
+
         def validate_inclusion
           return if @options[:in].include?(@value)
 
