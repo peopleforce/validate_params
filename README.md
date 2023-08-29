@@ -72,6 +72,14 @@ If the parameters are valid, the controller action will be executed as normal. I
         {
             "message": "hired_on must be a valid Date"
         },
+        {
+            "message": "per_page cannot be more than maximum",
+            "max": 50
+        },
+        {
+            "message": "states is an invalid value",
+            "valid_values": ["active", "inactive"]
+        },
 
     ]
 }
