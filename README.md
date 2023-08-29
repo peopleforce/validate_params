@@ -46,6 +46,19 @@ class TestController < ActionController::Base
 end
 ```
 
+### Types
+
+Here are the following supported types along with operations supported.
+
+- String (required, default)
+- Integer (required, default, min, max, in)
+- Date (required, default, min, max)
+- DateTime (required, default, min, max)
+- IO (required, min, max)
+- Array
+- Hash
+
+
 ## Response
 
 If the parameters are valid, the controller action will be executed as normal. If the parameters are invalid, a **400 Bad Request** response will be returned with a JSON body containing the errors, or an empty HTML response.
