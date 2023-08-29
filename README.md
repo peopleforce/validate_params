@@ -49,6 +49,8 @@ end
 
 If the parameters are valid, the controller action will be executed as normal. If the parameters are invalid, a **400 Bad Request** response will be returned with a JSON body containing the errors, or an empty HTML response.
 
+### JSON (Default)
+
 ```json
 {
     "success": false,
@@ -61,9 +63,9 @@ If the parameters are valid, the controller action will be executed as normal. I
 }
 ```
 
-## Format
+### HTML
 
-By default responses are returned in JSON format. To return responses as an empty HTML response, change the :format options in the validate_params methods to :html.
+By default responses are returned in JSON format. To return responses as an empty HTML response with a **400 Bad Request** status, change the :format option in the validate_params methods to **:html**.
 
 Example:
 
