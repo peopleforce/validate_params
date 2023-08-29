@@ -25,6 +25,7 @@ class TestController < ActionController::Base
   validate_params :index do |p|
     p.param :name, String, default: "John Doe"
     p.param :occurred_on, Date, required: true, default: proc { Date.today }
+    p.param :per_page, Integer, default: 50, min: 1, max: 50
     p.param :quantity, Integer, required: true, in: [1, 2, 3]
     p.param :user_ids, Array, of: Integer, default: [1, 2, 3]
     p.param :states, Array, of: String, default: ["active", "inactive"], reject_blank: true
