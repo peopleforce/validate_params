@@ -82,10 +82,10 @@ module ValidateParams
             return
           end
 
-          formatted_value = Types::IO.cast(@value)
+          io_size = @value.size
 
-          validate_min(formatted_value) if @options[:min].present?
-          validate_max(formatted_value) if @options[:max].present?
+          validate_min(io_size) if @options[:min].present?
+          validate_max(io_size) if @options[:max].present?
         end
 
         def validate_inclusion
