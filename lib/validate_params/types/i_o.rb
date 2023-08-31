@@ -6,6 +6,12 @@ module ValidateParams
       def self.valid?(value)
         value.class.method_defined?(:size)
       end
+
+      def self.cast(raw_value, **)
+        return nil if raw_value.size.zero?
+
+        raw_value
+      end
     end
   end
 end
