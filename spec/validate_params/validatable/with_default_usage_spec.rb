@@ -107,10 +107,10 @@ RSpec.describe ValidateParams::Validatable do
 
         it "returns failure" do
           expect(subject).to match hash_including(
-                                     json: hash_including(
-                                       success: false
-                                     )
-                                   )
+            json: hash_including(
+              success: false
+            )
+          )
         end
       end
 
