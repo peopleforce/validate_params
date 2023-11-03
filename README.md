@@ -27,6 +27,7 @@ class TestController < ActionController::Base
     p.param :occurred_on, Date, required: true, default: proc { Date.today }
     p.param :per_page, Integer, default: 50, min: 1, max: 50
     p.param :quantity, Integer, required: true, in: [1, 2, 3]
+    p.param :weight, Float
     p.param :user_ids, Array, of: Integer, default: [1, 2, 3]
     p.param :states, Array, of: String, default: ["active", "inactive"], reject_blank: true
     p.param :file, IO, min: 1.byte, max: 1.megabyte
@@ -52,10 +53,11 @@ Here are the following supported types along with operations supported.
 
 - String (required, default)
 - Integer (required, default, min, max, in)
+- Float (required, default, min, max, in)
 - Date (required, default, min, max)
 - DateTime (required, default, min, max)
 - IO (required, min, max)
-- Array of: (String|Integer) (default, reject_blank)
+- Array of: (String|Integer|Float) (default, reject_blank)
 - Hash - Nested block of types
 
 

@@ -72,6 +72,19 @@ module ValidateParams
           validate_max(formatted_value) if @options[:max].present?
         end
 
+        def float
+          unless Types::Float.valid?(@value)
+            @errors << { message: error_message }
+            return
+          end
+
+          formatted_value = Types::Float.cast(@value)
+
+          validate_inclusion if @options[:in].present?
+          validate_min(formatted_value) if @options[:min].present?
+          validate_max(formatted_value) if @options[:max].present?
+        end
+
         def string
           validate_inclusion if @options[:in].present?
         end

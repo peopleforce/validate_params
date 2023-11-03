@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+## [0.11.0] - 2023-11-04
+
+- Added support for Float type
+- Improved validation for Array type
+
 ## [0.10.0] - 2023-08-28
 
 - Added support for IO type to validate file uploads
