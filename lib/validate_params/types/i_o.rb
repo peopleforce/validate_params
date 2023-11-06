@@ -8,7 +8,7 @@ module ValidateParams
       end
 
       def self.cast(raw_value, **)
-        return nil if raw_value.empty?
+        return nil if raw_value.size.zero?
 
         raw_value
       end
