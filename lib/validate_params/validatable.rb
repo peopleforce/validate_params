@@ -3,6 +3,7 @@
 require "validate_params/types/date"
 require "validate_params/types/date_time"
 require "validate_params/types/integer"
+require "validate_params/types/float"
 require "validate_params/types/array"
 require "validate_params/types/string"
 require "validate_params/types/i_o"

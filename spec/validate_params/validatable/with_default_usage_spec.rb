@@ -9,6 +9,7 @@ RSpec.describe ValidateParams::Validatable do
   let(:quantity) { "1234" }
   let(:date_of_birth) { "2022-01-01" }
   let(:created_at) { "1683749410" }
+  let(:weight) { 3.14 }
 
   context "with symbol param name" do
     let(:ctrl) { DefaultWithSymbolController.new(request_params) }
@@ -62,6 +63,54 @@ RSpec.describe ValidateParams::Validatable do
         it "returns success" do
           subject
           expect(request_params[:user_ids]).to eq([1, 2, 3])
+        end
+      end
+
+      context "when weight is present" do
+        let(:request_params) { { weight: weight } }
+
+        it "returns success" do
+          subject
+          expect(request_params[:weight]).to eq(weight)
+        end
+      end
+
+      context "when weight is numeric string" do
+        let(:request_params) { { weight: weight.to_s } }
+
+        it "returns success" do
+          subject
+          expect(request_params[:weight]).to eq(weight)
+        end
+      end
+
+      context "when weight is integer" do
+        let(:request_params) { { weight: 3 } }
+
+        it "returns failure" do
+          subject
+          expect(request_params[:weight]).to eq(3)
+        end
+      end
+
+      context "when weight is nil" do
+        let(:request_params) { { weight: nil } }
+
+        it "returns failure" do
+          subject
+          expect(request_params[:weight]).to eq(nil)
+        end
+      end
+
+      context "when weight is string" do
+        let(:request_params) { { weight: "one" } }
+
+        it "returns failure" do
+          expect(subject).to match hash_including(
+            json: hash_including(
+              success: false
+            )
+          )
         end
       end
 
