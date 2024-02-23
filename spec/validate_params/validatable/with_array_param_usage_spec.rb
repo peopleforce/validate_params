@@ -8,7 +8,26 @@ RSpec.describe ValidateParams::Validatable do
   let(:user_ids) { [1, 2, 3] }
   let(:team_ids) { %w[main support] }
   let(:states) { %i[active inactive] }
-  let(:request_params) { { user_ids: user_ids, team_ids: team_ids, states: states } }
+  let(:array_of_hashes) { [{ name: "Test1", age: 20 }, { name: "Test2", age: 30 }] }
+  let(:hash_of_hashes) do
+    {
+      hash_of_hashes: {
+        name: "Test1",
+        age: 20,
+        additional: { name2: "Test2", age2: 30 }
+      }
+    }
+  end
+
+  let(:request_params) do
+    {
+      user_ids: user_ids,
+      team_ids: team_ids,
+      states: states,
+      array_of_hashes: array_of_hashes,
+      hash_of_hashes: hash_of_hashes
+    }
+  end
 
   context "with symbol param name" do
     let(:ctrl) { WithArrayParamsController.new(request_params) }
@@ -20,7 +39,8 @@ RSpec.describe ValidateParams::Validatable do
 
           expect(request_params[:user_ids]).to eq(user_ids)
           expect(request_params[:team_ids]).to eq(team_ids)
-          expect(request_params[:states]).to eq(states)
+          expect(request_params[:hash_of_hashes]).to eq(hash_of_hashes)
+          expect(request_params[:array_of_hashes]).to eq(array_of_hashes)
         end
       end
 
