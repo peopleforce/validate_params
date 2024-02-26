@@ -19,7 +19,7 @@ module ValidateParams
                 children.each { |c| c.valid?(value&.[](c.field), errors) }
               end
             when "Array"
-              values = value ? Array(value) : [nil]
+              values = value ? Array.wrap(value) : [nil]
               values.each do |item|
                 children.each { |c| c.valid?(item&.[](c.field), errors) }
               end
