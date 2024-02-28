@@ -15,13 +15,16 @@ module ValidateParams
             case type.to_s
             when "Hash"
               # Skip in case hash is configured and string is passed
-              unless value.is_a?(String)
+              if !value.is_a?(String)
                 children.each { |c| c.valid?(value&.[](c.field), errors) }
               end
             when "Array"
               values = value ? Array.wrap(value) : [nil]
               values.each do |item|
-                children.each { |c| c.valid?(item&.[](c.field), errors) }
+                children.each do |child|
+                  child_value = item[child.field] if item.is_a?(Hash) || item.is_a?(Array)
+                  child.valid?(child_value, errors)
+                end
               end
             else
               raise "Unexpected type: #{type}"
@@ -41,7 +44,7 @@ module ValidateParams
         validation = Validation.new(field, type, options, [], @parent)
 
         if block_given?
-          unless [Array, Hash].include?(type)
+          if ![Array, Hash].include?(type)
             raise "#{type} type cannot have nested definitions, only Array or Hash are supported"
           end
 

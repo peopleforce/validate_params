@@ -92,7 +92,7 @@ module ValidateParams
         return if validation.children.any?
 
         options = validation.options.presence || {}
-        return unless options.key?(:default)
+        return if !options.key?(:default)
 
         value = options[:default].is_a?(Proc) ? options[:default].call : options[:default]
         params[validation.field] ||= value
@@ -121,10 +121,6 @@ module ValidateParams
 
         options = validation.options.presence || {}
         params[validation.field] = Types.const_get(validation.type.name).cast(value, **options)
-      end
-
-      def hashlike?(obj)
-        obj.is_a?(Hash) || obj.is_a?(ActionController::Parameters)
       end
   end
 end
