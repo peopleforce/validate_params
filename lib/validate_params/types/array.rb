@@ -17,7 +17,7 @@ module ValidateParams
         when "String"
           val.all? { |item| item.is_a?(::String) }
         when "Hash"
-          val.all? { |item| item.is_a?(::Hash) }
+          val.all? { |item| item.is_a?(::Hash) || item.is_a?(ActionController::Parameters) }
         else
           true
         end
