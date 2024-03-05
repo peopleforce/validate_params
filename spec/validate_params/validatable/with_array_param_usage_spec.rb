@@ -11,10 +11,11 @@ RSpec.describe ValidateParams::Validatable do
   let(:array_of_hashes) { [{ name: "Test1", age: 20 }, { name: "Test2", age: 30 }] }
   let(:hash_of_hashes) do
     {
-      hash_of_hashes: {
-        name: "Test1",
-        age: 20,
-        additional: { name2: "Test2", age2: 30 }
+      name: "Test1",
+      age: 20,
+      additional: {
+        name2: "Test2",
+        age2: 30
       }
     }
   end
@@ -132,6 +133,61 @@ RSpec.describe ValidateParams::Validatable do
         let(:array_of_hashes) { [{ name: 100, age: "invalid" }] }
 
         it_behaves_like "returns failure"
+      end
+
+      context "when array_of_hashes is array of ActionController::Parameters" do
+        let(:array_of_hashes) do
+          [
+            ActionController::Parameters.new(name: "Test1", age: 20),
+            ActionController::Parameters.new(name: "Test2", age: 30)
+          ]
+        end
+
+        it "returns success" do
+          subject
+          expect(request_params[:array_of_hashes]).to eq(array_of_hashes)
+        end
+
+        context "with invalid values" do
+          let(:array_of_hashes) do
+            [
+              ActionController::Parameters.new(name: 100, age: "invalid"),
+              ActionController::Parameters.new(name: "Test2", age: 30)
+            ]
+          end
+
+          it_behaves_like "returns failure"
+        end
+      end
+
+      context "when hash_of_hashes is ActionController::Parameters" do
+        let(:hash_of_hashes) do
+          ActionController::Parameters.new(
+            name: "Test1",
+            age: 20,
+            additional: ActionController::Parameters.new(name2: "Test2", age2: 30)
+          )
+        end
+
+        it "returns success" do
+          subject
+          expect(request_params[:hash_of_hashes]).to eq(hash_of_hashes)
+        end
+
+        context "with invalid values" do
+          let(:hash_of_hashes) do
+            ActionController::Parameters.new(
+              name: 100,
+              age: "invalid",
+              additional: ActionController::Parameters.new(
+                name2: 100500,
+                age2: "invalid2"
+              )
+            )
+          end
+
+          it_behaves_like "returns failure"
+        end
       end
     end
   end

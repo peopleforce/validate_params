@@ -22,7 +22,9 @@ module ValidateParams
               values = value ? Array.wrap(value) : [nil]
               values.each do |item|
                 children.each do |child|
-                  child_value = item[child.field] if item.is_a?(Hash) || item.is_a?(Array)
+                  child_value = item[child.field] if item.is_a?(Hash) ||
+                    item.is_a?(ActionController::Parameters) ||
+                    item.is_a?(Array)
                   child.valid?(child_value, errors)
                 end
               end
