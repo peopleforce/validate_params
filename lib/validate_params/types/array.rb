@@ -3,7 +3,7 @@
 module ValidateParams
   class Types
     class Array
-      def self.valid?(value, of: String, reject_blank: false, **)
+      def self.valid?(value, of: ::String, reject_blank: false, **)
         return false unless value.is_a?(::Array)
 
         val = value
@@ -16,12 +16,14 @@ module ValidateParams
           val.all? { |item| Types::Float.valid?(item) }
         when "String"
           val.all? { |item| item.is_a?(::String) }
+        when "Hash"
+          val.all? { |item| item.is_a?(::Hash) }
         else
           true
         end
       end
 
-      def self.cast(raw_value, of: String, reject_blank: false, **)
+      def self.cast(raw_value, of: ::String, reject_blank: false, **)
         value = raw_value
         value.reject!(&:blank?) if reject_blank
 

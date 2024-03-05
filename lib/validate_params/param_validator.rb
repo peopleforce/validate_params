@@ -9,12 +9,13 @@ module ValidateParams
         new(**args).call
       end
 
-      def initialize(type:, field:, value:, errors:, options: {})
-        @type = type
-        @field = field
+      attr_reader :validation
+
+      def initialize(validation:, value:, errors:)
+        @validation = validation
         @value = value
         @errors = errors
-        @options = options
+        @options = validation.options.presence || {}
       end
 
       def call
@@ -25,7 +26,7 @@ module ValidateParams
           return
         end
 
-        send(@type.to_s.underscore)
+        send(validation.type.to_s.underscore)
       end
 
       private
@@ -129,18 +130,15 @@ module ValidateParams
         end
 
         def error_param_name
-          case @field
-          when Array
-            "#{@field[0]}[#{@field[1]}]"
-          when Hash
-            @field.map { |k, v| "#{k}[#{v}]" }.first
+          if validation.parent
+            "#{validation.parent.field}[#{validation.field}]"
           else
-            @field
+            validation.field
           end
         end
 
         def error_message
-          I18n.t("validate_params.invalid_type", param: error_param_name, type: @type)
+          I18n.t("validate_params.invalid_type", param: error_param_name, type: validation.type)
         end
 
         def required_error_message
