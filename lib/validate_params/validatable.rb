@@ -23,6 +23,29 @@ module ValidateParams
     class_methods do
       attr_reader :params_validations
 
+      # When controller inherits from other controller, we need to copy the validations.
+      #
+      # Usage example:
+      #
+      # class ParentController < ApplicationController
+      #   validate_params_for :index do |p|
+      #     p.param :param1, Integer, min: 1, max: 10
+      #     p.param :param2, Integer, min: 10, max: 20
+      #   end
+      # end
+      #
+      # class ChildController < ParentController
+      #   validate_params_for :index do |p|
+      #     p.param :param1, Integer, min: 0, max: 5
+      #   end
+      # end
+      #
+      # Here in ChildController, the param1 validation will be overridden, but validation for param2 will remain unchanged.
+      #
+      def inherited(child)
+        child.instance_variable_set("@params_validations", @params_validations.deep_dup)
+      end
+
       def validate_params_for(action, options = {})
         options[:format] ||= :json
         @params_validations ||= {}
