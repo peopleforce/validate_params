@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "validate_params/configuration"
+
 require "validate_params/types/date"
 require "validate_params/types/date_time"
 require "validate_params/types/integer"
@@ -27,6 +29,8 @@ module ValidateParams
         options[:format] ||= :json
         @params_validations ||= {}
 
+        options = Validatable.configuration.as_json.merge(options)
+
         Array(action).each do |act|
           @params_validations[act] ||= { options: options, validations: [] }
 
@@ -36,6 +40,14 @@ module ValidateParams
           end
         end
       end
+    end
+
+    def self.configuration
+      @configuration ||= Configuration.new
+    end
+
+    def self.configure(&block)
+      yield(configuration)
     end
 
     def params_validations

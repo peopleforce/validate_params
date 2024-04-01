@@ -2,10 +2,10 @@ module ValidateParams
   module Validatable
     module Utilities
       class Scrubber
-        def self.scrub(input_string)
+        def self.scrub(input_string, replacement: Validatable.configuration.scrub_invalid_utf8_replacement)
           input_string
-            .scrub("")
-            .tr("\u0000", "")
+            .scrub(replacement)
+            .tr("\u0000", replacement)
         end
       end
     end
