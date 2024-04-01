@@ -8,11 +8,11 @@ ValidateParams is a lightweight, robust Ruby on Rails gem that introduces a simp
 
 Install the gem and add to the application's Gemfile by executing:
 
-    $ bundle add validate_params
+    $ bundle add validate-params
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
-    $ gem install validate_params
+    $ gem install validate-params
 
 ## Usage
 
