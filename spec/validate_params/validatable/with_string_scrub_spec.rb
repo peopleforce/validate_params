@@ -3,13 +3,51 @@
 require "fixtures/controllers/with_string_controller"
 
 RSpec.describe ValidateParams::Validatable do
-  subject { ctrl.run_callbacks }
+  INVALID_UTF_8_STRING = "Hello, \xFF\u0000World!"
+  VALID_UTF_8_STRING = "Hello, World!"
 
-  let(:title) { "Great Article" }
-  let(:description) { "Article Description" }
+  let(:with_scrub) { "" }
+  let(:without_scrub) { "" }
+  let(:default) { "" }
 
   let(:ctrl) { WithStringController.new(request_params) }
-  let(:request_params) { { title: title, description: description } }
+  let(:request_params) { { with_scrub: with_scrub, without_scrub: without_scrub, default: default } }
+
+  subject { ctrl.run_callbacks }
+
+  before(:context) do
+    ValidateParams::Validatable.configuration.scrub_invalid_utf8 = true
+    ValidateParams::Validatable.configure do |config|
+      config.scrub_invalid_utf8 = true
+    end
+    described_class.configuration.scrub_invalid_utf8 = true
+    described_class.configure do |config|
+      config.scrub_invalid_utf8 = true
+    end
+  end
+
+  before(:all) do
+    ValidateParams::Validatable.configuration.scrub_invalid_utf8 = true
+    ValidateParams::Validatable.configure do |config|
+      config.scrub_invalid_utf8 = true
+    end
+    described_class.configuration.scrub_invalid_utf8 = true
+    described_class.configure do |config|
+      config.scrub_invalid_utf8 = true
+    end
+
+  end
+
+  before(:each) do
+    ValidateParams::Validatable.configuration.scrub_invalid_utf8 = true
+    ValidateParams::Validatable.configure do |config|
+      config.scrub_invalid_utf8 = true
+    end
+    described_class.configuration.scrub_invalid_utf8 = true
+    described_class.configure do |config|
+      config.scrub_invalid_utf8 = true
+    end
+  end
 
   describe ".perform_validate_params" do
     context "when params are valid" do
@@ -17,25 +55,53 @@ RSpec.describe ValidateParams::Validatable do
     end
 
     context "when params contains invalid UTF-8 character" do
-      context "without params and configuration" do
-        let(:title) { "Hello, \xFF \u0000 World!" }
-
-        it { is_expected.to be_nil }
-
+      context "without scrub_invalid_utf8 option and configuration" do
         it "does not change input string" do
-
-        end
-      end
-
-      context "with scrub_invalid_utf8 option enabled by default" do
-        it "applies to all parameters" do
-
+          expect {
+            subject
+          }.to_not change { request_params[:without_scrub] }
         end
       end
 
       context "with scrub_invalid_utf8 option enabled for specific parameter" do
-        it "does not change other parameters" do
+        let(:with_scrub) { INVALID_UTF_8_STRING }
+        let(:without_scrub) { INVALID_UTF_8_STRING }
+        let(:default) { INVALID_UTF_8_STRING }
 
+        it "removed invalid symbols from parameter" do
+          expect {
+            subject
+          }.to change { request_params[:with_scrub] }.to(VALID_UTF_8_STRING)
+        end
+
+        it "does not change parameter with default" do
+          expect {
+            subject
+          }.to_not change { request_params[:default] }
+        end
+
+        it "does not change parameter with disabled scrub" do
+          expect {
+            subject
+          }.to_not change { request_params[:without_scrub] }
+        end
+      end
+
+      context "with scrub_invalid_utf8 option enabled by default" do
+        before do
+          config = ValidateParams::Validatable.configuration
+          allow(ValidateParams::Validatable.configuration).to receive(:as_json).and_return({ scrub_invalid_utf8: true, scrub_invalid_utf8_replacement: ""})
+          allow(config).to receive(:as_json).and_return({ scrub_invalid_utf8: true, scrub_invalid_utf8_replacement: ""})
+        end
+
+        let(:with_scrub) { INVALID_UTF_8_STRING }
+        let(:without_scrub) { INVALID_UTF_8_STRING }
+        let(:default) { INVALID_UTF_8_STRING }
+
+        it "can be overridden by particular parameter" do
+          expect {
+            subject
+          }.to_not change { request_params[:without_scrub] }
         end
       end
     end
