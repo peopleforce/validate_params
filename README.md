@@ -17,12 +17,14 @@ If bundler is not being used to manage dependencies, install the gem by executin
 
 ## Configuration
 
-To configure default options, create `initializers/validate_params.rb` file. Configuration example:
+To configure default options, create `config/initializers/validate_params.rb` file. Configuration example:
 
 ```ruby
-ValidateParams.configure do |config|
-  config.scrub_invalid_utf8 = true # Default: false
-  config.scrub_invalid_utf8_replacement = "�" # Default: empty string
+Rails.application.config.after_initialize do
+    ValidateParams::Validatable.configure do |config|
+      config.scrub_invalid_utf8 = true # Default: false
+      config.scrub_invalid_utf8_replacement = "�" # Default: empty string
+    end
 end
 ```
 Currently only these options are supported in configuration. If you need more options, please create an issue.

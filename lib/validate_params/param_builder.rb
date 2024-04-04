@@ -43,6 +43,7 @@ module ValidateParams
       end
 
       def param(field, type, options = {})
+        options = ValidateParams::Validatable.configuration.as_json.merge(options)
         validation = Validation.new(field, type, options, [], @parent)
 
         if block_given?

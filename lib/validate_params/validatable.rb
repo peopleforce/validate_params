@@ -18,6 +18,14 @@ module ValidateParams
   module Validatable
     extend ::ActiveSupport::Concern
 
+    def self.configure
+      yield(configuration)
+    end
+
+    def self.configuration
+      @configuration ||= Configuration.new
+    end
+
     included do
       before_action :perform_validate_params
     end
@@ -29,8 +37,6 @@ module ValidateParams
         options[:format] ||= :json
         @params_validations ||= {}
 
-        options = Validatable.configuration.as_json.merge(options)
-
         Array(action).each do |act|
           @params_validations[act] ||= { options: options, validations: [] }
 
@@ -40,14 +46,6 @@ module ValidateParams
           end
         end
       end
-    end
-
-    def self.configuration
-      @configuration ||= Configuration.new
-    end
-
-    def self.configure(&block)
-      yield(configuration)
     end
 
     def params_validations

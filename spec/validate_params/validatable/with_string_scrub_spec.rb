@@ -15,40 +15,6 @@ RSpec.describe ValidateParams::Validatable do
 
   subject { ctrl.run_callbacks }
 
-  before(:context) do
-    ValidateParams::Validatable.configuration.scrub_invalid_utf8 = true
-    ValidateParams::Validatable.configure do |config|
-      config.scrub_invalid_utf8 = true
-    end
-    described_class.configuration.scrub_invalid_utf8 = true
-    described_class.configure do |config|
-      config.scrub_invalid_utf8 = true
-    end
-  end
-
-  before(:all) do
-    ValidateParams::Validatable.configuration.scrub_invalid_utf8 = true
-    ValidateParams::Validatable.configure do |config|
-      config.scrub_invalid_utf8 = true
-    end
-    described_class.configuration.scrub_invalid_utf8 = true
-    described_class.configure do |config|
-      config.scrub_invalid_utf8 = true
-    end
-
-  end
-
-  before(:each) do
-    ValidateParams::Validatable.configuration.scrub_invalid_utf8 = true
-    ValidateParams::Validatable.configure do |config|
-      config.scrub_invalid_utf8 = true
-    end
-    described_class.configuration.scrub_invalid_utf8 = true
-    described_class.configure do |config|
-      config.scrub_invalid_utf8 = true
-    end
-  end
-
   describe ".perform_validate_params" do
     context "when params are valid" do
       it { is_expected.to be_nil }
@@ -88,12 +54,6 @@ RSpec.describe ValidateParams::Validatable do
       end
 
       context "with scrub_invalid_utf8 option enabled by default" do
-        before do
-          config = ValidateParams::Validatable.configuration
-          allow(ValidateParams::Validatable.configuration).to receive(:as_json).and_return({ scrub_invalid_utf8: true, scrub_invalid_utf8_replacement: ""})
-          allow(config).to receive(:as_json).and_return({ scrub_invalid_utf8: true, scrub_invalid_utf8_replacement: ""})
-        end
-
         let(:with_scrub) { INVALID_UTF_8_STRING }
         let(:without_scrub) { INVALID_UTF_8_STRING }
         let(:default) { INVALID_UTF_8_STRING }
