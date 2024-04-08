@@ -22,6 +22,8 @@ RSpec.describe ValidateParams::Validatable do
 
     context "when params contains invalid UTF-8 character" do
       context "without scrub_invalid_utf8 option and configuration" do
+        let(:without_scrub) { INVALID_UTF_8_STRING }
+
         it "does not change input string" do
           expect {
             subject
