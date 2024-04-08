@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+## [0.12.0] - 2024-04-09
+
+- Added `:scrub_invalid_utf8` and `:scrub_invalid_utf8_replacement` options to String type to handle invalid UTF-8 characters.
+- Added [configurator](README.md#configuration) to change default behaviour for certain options.
+
 ## [0.11.0] - 2023-11-04
 
 - Added support for Float type
