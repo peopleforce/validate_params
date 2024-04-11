@@ -1,9 +1,17 @@
 ## [Unreleased]
 
-## [0.12.0] - 2024-04-09
+## [0.13.0] - 2024-04-11
 
 - Added `:scrub_invalid_utf8` and `:scrub_invalid_utf8_replacement` options to String type to handle invalid UTF-8 characters.
 - Added [configurator](README.md#configuration) to change default behaviour for certain options.
+
+## [0.12.1] - 2024-03-05
+ - Fix support of ActionController::Parameters along with Hash
+
+## [0.12.0] - 2024-03-05
+
+- Support array of hashes
+- Improve nested attributes validation
 
 ## [0.11.0] - 2023-11-04
 
