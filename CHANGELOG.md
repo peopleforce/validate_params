@@ -6,12 +6,13 @@
 - Added [configurator](README.md#configuration) to change default behaviour for certain options.
 
 ## [0.12.1] - 2024-03-05
- - Fix support of ActionController::Parameters along with Hash
+
+- Fixed support of ActionController::Parameters along with Hash
 
 ## [0.12.0] - 2024-03-05
 
-- Support array of hashes
-- Improve nested attributes validation
+- Added support of array of hashes
+- Improved nested attributes validation
 
 ## [0.11.0] - 2023-11-04
 
