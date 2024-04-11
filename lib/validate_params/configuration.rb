@@ -7,7 +7,7 @@ module ValidateParams
       @scrub_invalid_utf8_replacement = ""
     end
 
-    def as_json
+    def to_h
       {
         scrub_invalid_utf8: scrub_invalid_utf8,
         scrub_invalid_utf8_replacement: scrub_invalid_utf8_replacement,
