@@ -2,8 +2,12 @@
 
 ## [0.13.0] - 2024-04-11
 
-- Added `:scrub_invalid_utf8` and `:scrub_invalid_utf8_replacement` options to String type to handle invalid UTF-8 characters.
-- Added [configurator](README.md#configuration) to change default behaviour for certain options.
+- Added `:scrub_invalid_utf8` and `:scrub_invalid_utf8_replacement` options to String type to handle invalid UTF-8 characters
+- Added [configurator](README.md#configuration) to change default behaviour for certain options
+
+## [0.12.2] - 2024-03-11
+
+- Added inheritance of validate params rule between child and parent controllers
 
 ## [0.12.1] - 2024-03-05
 
