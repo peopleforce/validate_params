@@ -118,7 +118,12 @@ module ValidateParams
         return if !options.key?(:default)
 
         value = options[:default].is_a?(Proc) ? options[:default].call : options[:default]
-        params[validation.field] ||= value
+
+        if validation.type == Integer
+          params[validation.field] = value if params[validation.field].blank?
+        else
+          params[validation.field] ||= value
+        end
       end
 
       def cast_param_values(params, validation)

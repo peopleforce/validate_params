@@ -1,4 +1,6 @@
-## [Unreleased]
+## [0.12.3] - 2024-04-14
+
+- Default option for Integer type should support empty string as well
 
 ## [0.11.0] - 2023-11-04
 
