@@ -14,9 +14,9 @@ module ValidateParams
           if children.any?
             case type.to_s
             when "Hash"
-              # Skip in case hash is configured and string is passed
-              if !value.is_a?(String)
-                children.each { |c| c.valid?(value&.[](c.field), errors) }
+              children.each do |child|
+                child_value = value[child.field] if value.is_a?(Hash) || value.is_a?(ActionController::Parameters)
+                child.valid?(child_value, errors)
               end
             when "Array"
               values = value ? Array.wrap(value) : [nil]
