@@ -79,9 +79,6 @@ module ValidateParams
               apply_default_values(sub_params, sub_validation)
             end
           elsif validation.type == Hash
-            # Skip in case hash is configured and string is passed
-            next if params[validation.field].is_a?(String)
-
             params[validation.field] ||= {}
             apply_default_values(params[validation.field], sub_validation)
           else
@@ -108,9 +105,6 @@ module ValidateParams
 
         validation.children.each do |sub_validation|
           if validation.type == Hash
-            # Skip in case hash is configured and string is passed
-            next if params[validation.field].is_a?(String)
-
             cast_param_values(params[validation.field], sub_validation)
           elsif validation.type == Array
             params[validation.field].each do |sub_params|

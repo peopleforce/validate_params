@@ -1,3 +1,7 @@
+## [0.12.5] - 2024-04-15
+
+- Restrict validation rules for Hash type objects
+
 ## [0.12.4] - 2024-04-14
 
 - Revert 0.12.2 changes
