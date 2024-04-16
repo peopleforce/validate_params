@@ -3,7 +3,7 @@
 require "fixtures/controllers/nested_controller"
 require "fixtures/controllers/nested_override_controller"
 
-xdescribe ValidateParams::Validatable do
+describe ValidateParams::Validatable do
   subject { ctrl.run_callbacks }
 
   let(:date_of_birth) { "2022-01-01" }
