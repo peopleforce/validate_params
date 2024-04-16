@@ -1,3 +1,9 @@
+## [0.13.0] - 2024-04-16
+
+- Added `:scrub_invalid_utf8` and `:scrub_invalid_utf8_replacement` options to String type to handle invalid UTF-8 characters
+- Added [configurator](README.md#configuration) to change default behaviour for certain options
+
+
 ## [0.12.5] - 2024-04-15
 
 - Restrict validation rules for Hash type objects
@@ -9,11 +15,6 @@
 ## [0.12.3] - 2024-04-14
 
 - Default option for Integer type should support empty string as well
-
-## [0.13.0] - 2024-04-11
-
-- Added `:scrub_invalid_utf8` and `:scrub_invalid_utf8_replacement` options to String type to handle invalid UTF-8 characters
-- Added [configurator](README.md#configuration) to change default behaviour for certain options
 
 ## [0.12.2] - 2024-03-11
 
