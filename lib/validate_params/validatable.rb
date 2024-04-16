@@ -33,29 +33,6 @@ module ValidateParams
     class_methods do
       attr_reader :params_validations
 
-      # When controller inherits from other controller, we need to copy the validations.
-      #
-      # Usage example:
-      #
-      # class ParentController < ApplicationController
-      #   validate_params_for :index do |p|
-      #     p.param :param1, Integer, min: 1, max: 10
-      #     p.param :param2, Integer, min: 10, max: 20
-      #   end
-      # end
-      #
-      # class ChildController < ParentController
-      #   validate_params_for :index do |p|
-      #     p.param :param1, Integer, min: 0, max: 5
-      #   end
-      # end
-      #
-      # Here in ChildController, the param1 validation will be overridden, but validation for param2 will remain unchanged.
-      #
-      def inherited(child)
-        child.instance_variable_set("@params_validations", @params_validations.deep_dup)
-      end
-
       def validate_params_for(action, options = {})
         options[:format] ||= :json
         @params_validations ||= {}
@@ -112,9 +89,6 @@ module ValidateParams
               apply_default_values(sub_params, sub_validation)
             end
           elsif validation.type == Hash
-            # Skip in case hash is configured and string is passed
-            next if params[validation.field].is_a?(String)
-
             params[validation.field] ||= {}
             apply_default_values(params[validation.field], sub_validation)
           else
@@ -128,7 +102,12 @@ module ValidateParams
         return if !options.key?(:default)
 
         value = options[:default].is_a?(Proc) ? options[:default].call : options[:default]
-        params[validation.field] ||= value
+
+        if validation.type == Integer
+          params[validation.field] = value if params[validation.field].blank?
+        else
+          params[validation.field] ||= value
+        end
       end
 
       def cast_param_values(params, validation)
@@ -136,9 +115,6 @@ module ValidateParams
 
         validation.children.each do |sub_validation|
           if validation.type == Hash
-            # Skip in case hash is configured and string is passed
-            next if params[validation.field].is_a?(String)
-
             cast_param_values(params[validation.field], sub_validation)
           elsif validation.type == Array
             params[validation.field].each do |sub_params|

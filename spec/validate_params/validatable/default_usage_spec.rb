@@ -93,7 +93,14 @@ RSpec.describe ValidateParams::Validatable do
           }
         end
 
-        it { is_expected.to be_nil }
+        it "render json error with localized message" do
+          expect(subject).to match hash_including(
+            json: hash_including(
+              success: false,
+              errors: array_including(message: "created_at must be a valid Hash")
+            )
+          )
+        end
       end
 
       context "when integer param invalid" do

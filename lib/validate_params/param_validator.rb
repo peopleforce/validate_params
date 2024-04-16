@@ -31,6 +31,12 @@ module ValidateParams
       end
 
       private
+        def hash
+          return if @value.is_a?(Hash) || @value.is_a?(ActionController::Parameters)
+
+          @errors << { message: error_message }
+        end
+
         def array
           return if Types::Array.valid?(@value, **@options)
 
