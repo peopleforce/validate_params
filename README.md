@@ -8,11 +8,28 @@ ValidateParams is a lightweight, robust Ruby on Rails gem that introduces a simp
 
 Install the gem and add to the application's Gemfile by executing:
 
-    $ bundle add validate_params
+    $ bundle add validate-params
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
-    $ gem install validate_params
+    $ gem install validate-params
+
+
+## Configuration
+
+To configure default options, create `config/initializers/validate_params.rb` file. Configuration example:
+
+```ruby
+Rails.application.config.after_initialize do
+    ValidateParams::Validatable.configure do |config|
+      config.scrub_invalid_utf8 = true # Default: false
+      config.scrub_invalid_utf8_replacement = "�" # Default: empty string
+    end
+end
+```
+Currently only these options are supported in configuration. If you need more options, please create an issue.
+
+**Be aware**: `scrub_invalid_utf8` mutates parameters value passed into controller. Learn more in [params mutation](#params-mutation) section.
 
 ## Usage
 
@@ -51,7 +68,7 @@ end
 
 Here are the following supported types along with operations supported.
 
-- String (required, default)
+- String (required, default, scrub_invalid_utf8, scrub_invalid_utf8_replacement)
 - Integer (required, default, min, max, in)
 - Float (required, default, min, max, in)
 - Date (required, default, min, max)
@@ -59,6 +76,14 @@ Here are the following supported types along with operations supported.
 - IO (required, min, max)
 - Array of: (String|Integer|Float) (default, reject_blank)
 - Hash - Nested block of types
+
+
+### Params mutation
+
+String type supports `scrub_invalid_utf8` and `scrub_invalid_utf8_replacement` options to handle invalid UTF-8 characters.
+If `scrub_invalid_utf8` is set to true, it will replace invalid UTF-8 characters with the value of `scrub_invalid_utf8_replacement`.
+
+This modified value will be passed to the controller parameters.
 
 
 ## Response
@@ -81,8 +106,7 @@ If the parameters are valid, the controller action will be executed as normal. I
         {
             "message": "states is an invalid value",
             "valid_values": ["active", "inactive"]
-        },
-
+        }
     ]
 }
 ```

@@ -1,3 +1,9 @@
+## [0.13.0] - 2024-04-16
+
+- Added `:scrub_invalid_utf8` and `:scrub_invalid_utf8_replacement` options to String type to handle invalid UTF-8 characters
+- Added [configurator](README.md#configuration) to change default behaviour for certain options
+
+
 ## [0.12.5] - 2024-04-15
 
 - Restrict validation rules for Hash type objects
@@ -9,6 +15,19 @@
 ## [0.12.3] - 2024-04-14
 
 - Default option for Integer type should support empty string as well
+
+## [0.12.2] - 2024-03-11
+
+- Added inheritance of validate params rule between child and parent controllers
+
+## [0.12.1] - 2024-03-05
+
+- Fixed support of ActionController::Parameters along with Hash
+
+## [0.12.0] - 2024-03-05
+
+- Added support of array of hashes
+- Improved nested attributes validation
 
 ## [0.11.0] - 2023-11-04
 

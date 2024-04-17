@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "validate_params/configuration"
+
 require "validate_params/types/date"
 require "validate_params/types/date_time"
 require "validate_params/types/integer"
@@ -15,6 +17,14 @@ require "active_support/concern"
 module ValidateParams
   module Validatable
     extend ::ActiveSupport::Concern
+
+    def self.configure
+      yield(configuration)
+    end
+
+    def self.configuration
+      @configuration ||= Configuration.new
+    end
 
     included do
       before_action :perform_validate_params

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "active_support/inflector"
+require "validate_params/extenstions/string"
 
 module ValidateParams
   module Validatable
