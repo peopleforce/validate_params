@@ -2,7 +2,7 @@
 
 RSpec.describe ValidateParams::Types::String do
   let(:raw_value) { "" }
-  let(:options) { Hash.new }
+  let(:options) { {} }
 
   subject { described_class.cast(raw_value, **options) }
 
@@ -17,7 +17,7 @@ RSpec.describe ValidateParams::Types::String do
 
     context "called without options" do
       let(:raw_value) { "Hello, \xFF \u0000 World!" }
-      let(:options) { Hash.new }
+      let(:options) { {} }
 
       it "returns the raw value" do
         expect(subject).to eq("Hello, \xFF \u0000 World!")

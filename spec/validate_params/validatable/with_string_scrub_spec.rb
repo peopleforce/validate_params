@@ -27,7 +27,7 @@ RSpec.describe ValidateParams::Validatable do
         it "does not change input string" do
           expect {
             subject
-          }.to_not change { request_params[:without_scrub] }
+          }.to_not(change { request_params[:without_scrub] })
         end
       end
 
@@ -45,13 +45,13 @@ RSpec.describe ValidateParams::Validatable do
         it "does not change parameter with default" do
           expect {
             subject
-          }.to_not change { request_params[:default] }
+          }.to_not(change { request_params[:default] })
         end
 
         it "does not change parameter with disabled scrub" do
           expect {
             subject
-          }.to_not change { request_params[:without_scrub] }
+          }.to_not(change { request_params[:without_scrub] })
         end
       end
 
@@ -63,7 +63,7 @@ RSpec.describe ValidateParams::Validatable do
         it "can be overridden by particular parameter" do
           expect {
             subject
-          }.to_not change { request_params[:without_scrub] }
+          }.to_not(change { request_params[:without_scrub] })
         end
       end
     end
