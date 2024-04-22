@@ -20,7 +20,7 @@ module ValidateParams
       end
 
       def call
-        return if @value.blank? && !@options[:required]
+        return if @value.nil? && !@options[:required]
 
         if @value.blank? && @options[:required]
           @errors << { message: required_error_message }
