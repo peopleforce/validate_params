@@ -20,7 +20,9 @@ If bundler is not being used to manage dependencies, install the gem by executin
 To configure default options, create `config/initializers/validate_params.rb` file. Configuration example:
 
 ```ruby
-Rails.application.config.after_initialize do
+require "validate_params/validatable"
+
+Rails.application.config.before_initialize do
     ValidateParams::Validatable.configure do |config|
       config.scrub_invalid_utf8 = true # Default: false
       config.scrub_invalid_utf8_replacement = "�" # Default: empty string
