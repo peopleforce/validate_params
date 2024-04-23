@@ -10,7 +10,7 @@ module ValidateParams
     def to_h
       {
         scrub_invalid_utf8: scrub_invalid_utf8,
-        scrub_invalid_utf8_replacement: scrub_invalid_utf8_replacement,
+        scrub_invalid_utf8_replacement: scrub_invalid_utf8_replacement
       }
     end
   end

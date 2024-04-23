@@ -1,8 +1,11 @@
+## [0.13.1] - 2024-04-22
+
+- Improved checking for empty strings
+
 ## [0.13.0] - 2024-04-16
 
 - Added `:scrub_invalid_utf8` and `:scrub_invalid_utf8_replacement` options to String type to handle invalid UTF-8 characters
 - Added [configurator](README.md#configuration) to change default behaviour for certain options
-
 
 ## [0.12.5] - 2024-04-15
 

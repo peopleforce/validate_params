@@ -84,6 +84,17 @@ RSpec.describe ValidateParams::Validatable do
         it { is_expected.to be_nil }
       end
 
+      shared_examples "created_at must be a valid Hash" do
+        it "render json error with localized message" do
+          expect(subject).to match hash_including(
+            json: hash_including(
+              success: false,
+              errors: array_including(message: "created_at must be a valid Hash")
+            )
+          )
+        end
+      end
+
       context "when date param configured as hash and string is passed" do
         let(:request_params) do
           {
@@ -93,13 +104,12 @@ RSpec.describe ValidateParams::Validatable do
           }
         end
 
-        it "render json error with localized message" do
-          expect(subject).to match hash_including(
-            json: hash_including(
-              success: false,
-              errors: array_including(message: "created_at must be a valid Hash")
-            )
-          )
+        it_behaves_like "created_at must be a valid Hash"
+
+        context "when empty string is passed" do
+          let(:created_at) { "" }
+
+          it_behaves_like "created_at must be a valid Hash"
         end
       end
 
