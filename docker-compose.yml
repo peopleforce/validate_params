@@ -1,13 +1,13 @@
 version: '3'
 
 services:
-  app:
+  appp:
     image: ruby:3.1.4
     working_dir: /app
     volumes:
-      - ./:/app
-      - bundler:/usr/local/bundle/
+      - ./:/appp
+      - bundlerr:/usr/local/bundle/
 
 volumes:
-  bundler:
+  bundlerr:
 

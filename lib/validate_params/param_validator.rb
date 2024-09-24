@@ -119,20 +119,22 @@ module ValidateParams
         end
 
         def validate_min(value)
-          return if @options[:min] <= value
+          min_value = @options[:min].is_a?(Proc) ? @options[:min].call : @options[:min]
+          return if min_value <= value
 
           @errors << {
             message: I18n.t("validate_params.less_than_min", param: error_param_name),
-            min: @options[:min]
+            min: min_value
           }
         end
 
         def validate_max(value)
-          return if @options[:max] >= value
+          max_value = @options[:max].is_a?(Proc) ? @options[:max].call : @options[:max]
+          return if max_value >= value
 
           @errors << {
             message: I18n.t("validate_params.more_than_max", param: error_param_name),
-            max: @options[:max]
+            max: max_value
           }
         end
 

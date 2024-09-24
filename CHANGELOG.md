@@ -1,3 +1,7 @@
+## [0.14.0] - 2024-09-25
+
+- Support for Proc as options for `:min` and `:max` to validate param values
+
 ## [0.13.1] - 2024-04-22
 
 - Improved checking for empty strings
