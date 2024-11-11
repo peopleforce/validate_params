@@ -9,6 +9,7 @@ require "validate_params/types/float"
 require "validate_params/types/array"
 require "validate_params/types/string"
 require "validate_params/types/i_o"
+require "validate_params/types/boolean"
 require_relative "param_builder"
 require_relative "param_validator"
 
@@ -129,7 +130,8 @@ module ValidateParams
         return if value.blank?
 
         options = validation.options.presence || {}
-        params[validation.field] = Types.const_get(validation.type.name).cast(value, **options)
+        type_name = validation.type.is_a?(Symbol) ? validation.type.to_s.classify : validation.type.name
+        params[validation.field] = Types.const_get(type_name).cast(value, **options)
       end
   end
 end

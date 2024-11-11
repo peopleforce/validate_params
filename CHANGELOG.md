@@ -1,3 +1,7 @@
+## [0.12.0] - 2024-11-11
+
+- Support for boolean type has been added
+
 ## [0.14.0] - 2024-09-25
 
 - Support for Proc as options for `:min` and `:max` to validate param values

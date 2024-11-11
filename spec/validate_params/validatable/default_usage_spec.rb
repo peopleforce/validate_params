@@ -10,6 +10,17 @@ RSpec.describe ValidateParams::Validatable do
   let(:date_of_birth) { "2022-01-01" }
   let(:created_at) { "1683749410" }
 
+  shared_examples "returns failure" do |message|
+    it "render json error with localized message" do
+      expect(subject).to match hash_including(
+                                 json: hash_including(
+                                   success: false,
+                                   errors: array_including(message: message)
+                                 )
+                               )
+    end
+  end
+
   context "with symbol param name" do
     let(:ctrl) { WithSymbolController.new(request_params) }
     let(:request_params) { { quantity: quantity, date_of_birth: date_of_birth, created_at: created_at } }
@@ -64,6 +75,26 @@ RSpec.describe ValidateParams::Validatable do
               errors: array_including(message: "created_at must be a valid DateTime")
             )
           )
+        end
+      end
+
+      context "when active param present" do
+        let(:request_params) { { active: active } }
+
+        ["A", "TrUe", 2, "invalid", :"2", "2", :invalid_value].each do |value|
+          context "when active param invalid (#{value})" do
+            let(:active) { "invalid" }
+
+            it_behaves_like "returns failure", "active must be a valid boolean"
+          end
+        end
+
+        ["T", "False", 1, "TRUE", :"0", "0", :on, "off"].each do |value|
+          context "when active param valid (#{value})" do
+            let(:active) { "invalid" }
+
+            it_behaves_like "returns failure", "active must be a valid boolean"
+          end
         end
       end
     end

@@ -8,6 +8,7 @@ class WithSymbolController < BaseTestController
     p.param :date_of_birth, Date
     p.param :created_at, DateTime
     p.param :user_ids, Array, of: Integer
+    p.param :active, :boolean
   end
 
   def index

@@ -109,6 +109,12 @@ module ValidateParams
           validate_max(io_size) if @options[:max].present?
         end
 
+        def boolean
+          return if Types::Boolean.valid?(@value)
+
+          @errors << { message: error_message }
+        end
+
         def validate_inclusion
           return if @options[:in].include?(@value)
 

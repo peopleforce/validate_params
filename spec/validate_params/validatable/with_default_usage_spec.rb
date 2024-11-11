@@ -10,6 +10,7 @@ RSpec.describe ValidateParams::Validatable do
   let(:date_of_birth) { "2022-01-01" }
   let(:created_at) { "1683749410" }
   let(:weight) { 3.14 }
+  let(:active) { true }
 
   context "with symbol param name" do
     let(:ctrl) { DefaultWithSymbolController.new(request_params) }
@@ -124,6 +125,16 @@ RSpec.describe ValidateParams::Validatable do
               success: false
             )
           )
+        end
+      end
+
+      context "when active is not present" do
+        let(:request_params) { {} }
+
+        it "returns success" do
+          subject
+
+          expect(request_params[:active]).to eq(true)
         end
       end
     end
