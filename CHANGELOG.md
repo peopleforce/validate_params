@@ -1,4 +1,4 @@
-## [0.12.0] - 2024-11-11
+## [0.15.0] - 2024-11-11
 
 - Support for boolean type has been added
 
