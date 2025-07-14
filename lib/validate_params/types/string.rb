@@ -8,7 +8,7 @@ module ValidateParams
       def self.cast(raw_value, scrub_invalid_utf8: false, **)
         value = raw_value.to_s
 
-        if scrub_invalid_utf8
+        if scrub_invalid_utf8 && raw_value.respond_to?(:scrub)
           value = Validatable::Utilities::Scrubber.scrub(raw_value)
         end
 

@@ -1,3 +1,7 @@
+## [0.14.1] - 2025-07-15
+
+- Fixed issue with `scrub_invalid_utf8` option in String type to ensure it works correctly with non-string inputs
+
 ## [0.14.0] - 2024-09-25
 
 - Support for Proc as options for `:min` and `:max` to validate param values
