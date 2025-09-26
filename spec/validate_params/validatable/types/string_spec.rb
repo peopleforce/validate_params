@@ -58,6 +58,22 @@ RSpec.describe ValidateParams::Types::String do
           expect(subject).to eq("Hello, ワールド!")
         end
       end
+
+      context "raw value is an array" do
+        let(:raw_value) { ["Hello", "World"] }
+
+        it "returns a string representation of the array" do
+          expect(subject).to eq("[\"Hello\", \"World\"]")
+        end
+      end
+
+      context "raw value is a integer" do
+        let(:raw_value) { 1234 }
+
+        it "returns a string representation of the integer" do
+          expect(subject).to eq("1234")
+        end
+      end
     end
   end
 end
