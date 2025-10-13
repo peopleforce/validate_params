@@ -1,3 +1,8 @@
+
+## [0.15.0] - 2025-09-26
+
+- Support for boolean type has been added
+
 ## [0.14.1] - 2025-07-15
 
 - Fixed issue with `scrub_invalid_utf8` option in String type to ensure it works correctly with non-string inputs

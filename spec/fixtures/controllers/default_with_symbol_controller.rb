@@ -10,6 +10,7 @@ class DefaultWithSymbolController < BaseTestController
     p.param :created_at, DateTime, default: "1683749410"
     p.param :user_ids, Array, of: Integer, default: [1]
     p.param :states, Array, default: %w[active inactive]
+    p.param :active, :boolean, default: true
   end
 
   def index
