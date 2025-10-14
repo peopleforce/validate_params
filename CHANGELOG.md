@@ -1,3 +1,6 @@
+## [0.15.1] - 2025-10-14
+
+- Fixed issue with DateTime type validation to reject timestamps that result in years greater than 9999
 
 ## [0.15.0] - 2025-09-26
 

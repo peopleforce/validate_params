@@ -4,7 +4,9 @@ module ValidateParams
   class Types
     class DateTime
       def self.valid?(value)
-        Time.at(Integer(value))
+        parsed_time = Time.at(Integer(value))
+        return false if parsed_time.year > 9999
+
         true
       rescue ArgumentError, TypeError
         false
