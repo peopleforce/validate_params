@@ -141,6 +141,16 @@ RSpec.describe ValidateParams::Validatable do
         end
       end
 
+      context "when user_ids of: Integer passed valid values" do
+        let(:request_params) { { user_ids: [1, 2] } }
+
+        it "returns failure" do
+          subject
+
+          expect(request_params[:active]).to eq(true)
+        end
+      end
+
       context "when active is not present" do
         let(:request_params) { {} }
 
