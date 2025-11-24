@@ -38,6 +38,8 @@ module ValidateParams
         end
 
         def array
+          array_validate_inclusion if @options[:in].present?
+
           return if Types::Array.valid?(@value, **@options)
 
           @errors << { message: error_message }
@@ -122,6 +124,19 @@ module ValidateParams
             message: I18n.t("validate_params.invalid_in", param: error_param_name),
             valid_values: @options[:in]
           }
+        end
+
+        def array_validate_inclusion
+          @value.each do |val|
+            unless @options[:in].include?(val)
+              @errors << {
+                message: I18n.t("validate_params.invalid_in", param: error_param_name),
+                valid_values: @options[:in]
+              }
+
+              return
+            end
+          end
         end
 
         def validate_min(value)

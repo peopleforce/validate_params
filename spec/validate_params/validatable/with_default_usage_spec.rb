@@ -128,6 +128,19 @@ RSpec.describe ValidateParams::Validatable do
         end
       end
 
+      context "when user_ids of: Integer passed values outside array" do
+        let(:request_params) { { user_ids: [1, 2, 3, 4] } }
+
+        it "returns failure" do
+          subject
+          expect(subject).to match hash_including(
+            json: hash_including(
+              success: false
+            )
+          )
+        end
+      end
+
       context "when active is not present" do
         let(:request_params) { {} }
 
