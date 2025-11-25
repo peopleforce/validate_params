@@ -1,4 +1,4 @@
-## [0.16.0] - 2025-10-14
+## [0.16.0] - 2025-11-25
 
 - Support `:in` options to Array, of: String
 

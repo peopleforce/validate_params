@@ -133,10 +133,9 @@ RSpec.describe ValidateParams::Validatable do
 
         it "returns failure" do
           subject
-          expect(subject).to match hash_including(
-            json: hash_including(
-              success: false
-            )
+
+          expect(subject.dig(:json, :errors)).to eq (
+            [{:message=>"user_ids has an invalid values: [4]", :valid_values=>[1, 2, 3]}]
           )
         end
       end

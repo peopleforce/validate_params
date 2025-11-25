@@ -128,11 +128,11 @@ module ValidateParams
         end
 
         def array_validate_inclusion
-          return if @value.all? { |val| @options[:in].include?(val) } || 
-            Types::Array.cast(@value, **@options).all? { |val| @options[:in].include?(val) }
+          extra_values = Types::Array.cast(@value, **@options) - @options[:in]
+          return if extra_values.empty?
 
           @errors << {
-            message: I18n.t("validate_params.invalid_in", param: error_param_name),
+            message: I18n.t("validate_params.array_invalid_in", param: error_param_name, values: extra_values),
             valid_values: @options[:in]
           }
         end
