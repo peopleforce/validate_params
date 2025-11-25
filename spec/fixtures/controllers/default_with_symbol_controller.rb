@@ -8,7 +8,7 @@ class DefaultWithSymbolController < BaseTestController
     p.param :weight, Float
     p.param :date_of_birth, Date, default: "2022-01-01"
     p.param :created_at, DateTime, default: "1683749410"
-    p.param :user_ids, Array, of: Integer, default: [1]
+    p.param :user_ids, Array, of: Integer, default: [1], in: [1, 2, 3]
     p.param :states, Array, default: %w[active inactive]
     p.param :active, :boolean, default: true
   end

@@ -38,9 +38,12 @@ module ValidateParams
         end
 
         def array
-          return if Types::Array.valid?(@value, **@options)
+          unless Types::Array.valid?(@value, **@options)
+            @errors << { message: error_message }
+            return
+          end
 
-          @errors << { message: error_message }
+          array_validate_inclusion if @options[:in].present?
         end
 
         def date
@@ -120,6 +123,16 @@ module ValidateParams
 
           @errors << {
             message: I18n.t("validate_params.invalid_in", param: error_param_name),
+            valid_values: @options[:in]
+          }
+        end
+
+        def array_validate_inclusion
+          extra_values = Types::Array.cast(@value, **@options) - @options[:in]
+          return if extra_values.empty?
+
+          @errors << {
+            message: I18n.t("validate_params.array_invalid_in", param: error_param_name, values: extra_values),
             valid_values: @options[:in]
           }
         end

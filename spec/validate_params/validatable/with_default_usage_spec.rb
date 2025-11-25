@@ -128,6 +128,28 @@ RSpec.describe ValidateParams::Validatable do
         end
       end
 
+      context "when user_ids of: Integer passed values outside array" do
+        let(:request_params) { { user_ids: [1, 2, 3, 4] } }
+
+        it "returns failure" do
+          subject
+
+          expect(subject.dig(:json, :errors)).to eq (
+            [{:message=>"user_ids has an invalid values: [4]", :valid_values=>[1, 2, 3]}]
+          )
+        end
+      end
+
+      context "when user_ids of: Integer passed valid values" do
+        let(:request_params) { { user_ids: [1, 2] } }
+
+        it "returns failure" do
+          subject
+
+          expect(request_params[:active]).to eq(true)
+        end
+      end
+
       context "when active is not present" do
         let(:request_params) { {} }
 
