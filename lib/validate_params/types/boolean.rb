@@ -7,7 +7,7 @@ module ValidateParams
       FALSE_VALUES = [false, 0, "0", :"0", "f", :f, "F", :F, "false", :false, "FALSE", :FALSE, "off", :off, "OFF", :OFF].to_set.freeze
 
       def self.valid?(value)
-        value.is_a?(::TrueClass) || value.is_a?(::FalseClass)
+        TRUE_VALUES.include?(value) || FALSE_VALUES.include?(value)
       end
 
       def self.cast(raw_value, **)
